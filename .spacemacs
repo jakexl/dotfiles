@@ -38,7 +38,7 @@ values."
      markdown
      syntax-checking
      auto-completion
-     company-mode
+     ;; company-mode
      erlang
      elixir
      git
@@ -48,11 +48,15 @@ values."
      org
      (colors :variables
              colors-enable-rainbow-identifiers t
-             colors-enable-nyan-cat-progress-bar (display-graphic-p))
-     editorconfig
+             colors-enable-nyan-cat-progress-bar (display-graphic-p)
+             colors-theme-identifiers-sat&light '((naquadah . (50 80))
+                                                  (monokai . (45 70))
+                                                  (sanityinc-solarized-light . (70 45)))
+             )
+     ;; editorconfig
      themes-megapack
-     perspectives
-     frame-geometry
+     ;; perspectives
+     ;; frame-geometry
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -113,12 +117,16 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-light
+   dotspacemacs-themes '(
+                         monokai
+                         leuven
+                         sanityinc-solarized-light
+                         naquadah
+                         solarized-light
                          spacemacs-light
                          spacemacs-dark
                          solarized-light
                          solarized-dark
-                         leuven
                          monokai
                          zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
@@ -163,7 +171,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Location where to auto-save files. Possible values are `original' to
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
@@ -270,7 +278,15 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (add-hook 'alchemist-mode-hook 'company-mode)
-  (setq powerline-default-separator 'zigzag)
+  (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+  (setq powerline-default-separator 'arrow)
+  (custom-theme-set-faces
+   'monokai
+   '(font-lock-comment-face ((t (:slant italic :foreground "#75715E"))))
+   '(font-lock-string-face ((t (:slant italic :foreground "#E6DB74"))))
+   '(font-lock-doc-face ((t (:slant italic :foreground "#75715E"))))
+   )
+  (spacemacs/toggle-vi-tilde-fringe-off)
   )
 
 (defun save-framegeometry ()

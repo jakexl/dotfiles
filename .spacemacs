@@ -51,6 +51,7 @@ values."
              colors-enable-nyan-cat-progress-bar (display-graphic-p)
              colors-theme-identifiers-sat&light '((naquadah . (50 80))
                                                   (monokai . (45 70))
+                                                  (tangotango . (50 75))
                                                   (sanityinc-solarized-light . (70 45)))
              )
      ;; editorconfig
@@ -118,6 +119,7 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         tangotango
                          monokai
                          leuven
                          sanityinc-solarized-light
@@ -280,16 +282,44 @@ This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (add-hook 'alchemist-mode-hook 'company-mode)
   (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+  (add-hook 'hack-local-variables-hook (lambda () (setq truncate-lines t)))
   (setq powerline-default-separator 'arrow)
   (custom-theme-set-faces
-   'monokai
-   '(font-lock-comment-face ((t (:slant italic :foreground "#75715E"))))
-   '(font-lock-string-face ((t (:slant italic :foreground "#E6DB74"))))
-   '(font-lock-doc-face ((t (:slant italic :foreground "#75715E"))))
+   ;; 'monokai
+   ;; '(font-lock-comment-face ((t (:slant italic :foreground "#75715E"))))
+   ;; '(font-lock-string-face ((t (:slant italic :foreground "#E6DB74"))))
+   ;; '(font-lock-doc-face ((t (:slant italic :foreground "#75715E"))))
+   'tangotango
+   '(font-lock-comment-face ((t (:slant italic :foreground "#888a85"))))
+   '(font-lock-doc-face ((t (:slant italic :foreground "#888a85"))))
+   '(ahs-plugin-whole-buffer-face ((t (:background "#2e3434"))))
+   '(highlight ((t (:background "#3e4444"))))
    )
   (spacemacs/toggle-vi-tilde-fringe-off)
   (spacemacs/toggle-automatic-symbol-highlight-on)
   (global-git-commit-mode t)
+  (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
+  ;; -- Fringeline
+  ;; Display - in the fringe line for EOF
+  (setq-default indicate-empty-lines t)
+  ;; Set the fringe bitmaps as emacs default values
+  (setq-default fringe-indicator-alist
+                '((truncation left-arrow right-arrow)
+                  (continuation left-curly-arrow right-curly-arrow)
+                  (overlay-arrow . right-triangle)
+                  (up . up-arrow)
+                  (down . down-arrow)
+                  (top top-left-angle top-right-angle)
+                  (bottom bottom-left-angle
+                          bottom-right-angle
+                          top-right-angle
+                          top-left-angle)
+                  (top-bottom left-bracket
+                              right-bracket
+                              top-right-angle
+                              top-left-angle)
+                  (empty-line . empty-line)
+                  (unknown . question-mark)))
   )
 
 (defun save-framegeometry ()

@@ -119,8 +119,8 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         tangotango
                          monokai
+                         tangotango
                          leuven
                          sanityinc-solarized-light
                          naquadah
@@ -285,15 +285,18 @@ layers configuration. You are free to put any user code."
   (add-hook 'hack-local-variables-hook (lambda () (setq truncate-lines t)))
   (setq powerline-default-separator 'arrow)
   (custom-theme-set-faces
-   ;; 'monokai
-   ;; '(font-lock-comment-face ((t (:slant italic :foreground "#75715E"))))
-   ;; '(font-lock-string-face ((t (:slant italic :foreground "#E6DB74"))))
-   ;; '(font-lock-doc-face ((t (:slant italic :foreground "#75715E"))))
-   'tangotango
-   '(font-lock-comment-face ((t (:slant italic :foreground "#888a85"))))
-   '(font-lock-doc-face ((t (:slant italic :foreground "#888a85"))))
-   '(ahs-plugin-whole-buffer-face ((t (:background "#2e3434"))))
-   '(highlight ((t (:background "#3e4444"))))
+   'monokai
+   '(font-lock-comment-face ((t (:slant italic :foreground "#75715E"))))
+   '(font-lock-string-face ((t (:slant italic :foreground "#E6DB74"))))
+   '(font-lock-doc-face ((t (:slant italic :foreground "#75715E"))))
+   '(ahs-face ((t (:foreground "black" :background "Orange1"))))
+   '(ahs-plugin-whole-buffer-face ((t (:foreground "gray80" :background "#474842"))))
+   ;; '(ahs-face ((t (:background "#373832"))))
+   ;; 'tangotango
+   ;; '(font-lock-comment-face ((t (:slant italic :foreground "#888a85"))))
+   ;; '(font-lock-doc-face ((t (:slant italic :foreground "#888a85"))))
+   ;; '(ahs-plugin-whole-buffer-face ((t (:background "#2e3434"))))
+   ;; '(highlight ((t (:background "#3e4444"))))
    )
   (spacemacs/toggle-vi-tilde-fringe-off)
   (spacemacs/toggle-automatic-symbol-highlight-on)

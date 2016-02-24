@@ -1,0 +1,29 @@
+{
+	"always_show_minimap_viewport": true,
+	"bold_folder_labels": true,
+	"color_scheme": "Packages/Material Theme/schemes/Material-Theme.tmTheme",
+	"env":
+	{
+		"PATH": "/usr/local/bin"
+	},
+	"font_face": "Fira Code",
+	"font_size": 14,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"indent_guide_options":
+	[
+		"draw_normal",
+		"draw_active"
+	],
+	"line_padding_bottom": 2,
+	"line_padding_top": 2,
+	"material_theme_accent_yellow": true,
+	"material_theme_small_statusbar": true,
+	"material_theme_small_tab": true,
+	"material_theme_tabs_separator": true,
+	"overlay_scroll_bars": "enabled",
+	"save_on_focus_lost": true,
+	"theme": "Material-Theme.sublime-theme"
+}

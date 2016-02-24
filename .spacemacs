@@ -41,6 +41,7 @@ values."
      ;; company-mode
      erlang
      elixir
+     csharp
      git
      dash
      osx
@@ -301,6 +302,7 @@ layers configuration. You are free to put any user code."
   (spacemacs/toggle-vi-tilde-fringe-off)
   (spacemacs/toggle-automatic-symbol-highlight-on)
   (global-git-commit-mode t)
+  (setq-default omnisharp-server-executable-path "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
   (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
   ;; -- Fringeline
   ;; Display - in the fringe line for EOF

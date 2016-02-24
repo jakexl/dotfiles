@@ -25,5 +25,6 @@
 	"material_theme_tabs_separator": true,
 	"overlay_scroll_bars": "enabled",
 	"save_on_focus_lost": true,
+	"show_encoding": true,
 	"theme": "Material-Theme.sublime-theme"
 }

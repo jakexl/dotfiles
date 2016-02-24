@@ -1,0 +1,7 @@
+[
+	{ "keys": ["home"], "command": "move_to", "args": {"to": "bol", "extend": false} },
+	{ "keys": ["shift+home"], "command": "move_to", "args": {"to": "bol", "extend": true} },
+	{ "keys": ["end"], "command": "move_to", "args": {"to": "eol", "extend": false} },
+	{ "keys": ["shift+end"], "command": "move_to", "args": {"to": "eol", "extend": true} },
+	{"keys": ["ctrl+["], "command": "_enter_normal_mode", 	"args": {"mode": "mode_insert"},	"context": [{"key": "vi_insert_mode_aware"}]},
+]

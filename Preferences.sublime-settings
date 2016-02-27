@@ -1,7 +1,7 @@
 {
 	"always_show_minimap_viewport": true,
 	"bold_folder_labels": true,
-	"color_scheme": "Packages/Material Theme/schemes/Material-Theme.tmTheme",
+	"color_scheme": "Packages/User/SublimeLinter/Monokai Bright (SL).tmTheme",
 	"env":
 	{
 		"PATH": "/usr/local/bin"
@@ -26,5 +26,6 @@
 	"overlay_scroll_bars": "enabled",
 	"save_on_focus_lost": true,
 	"show_encoding": true,
+    "rulers": [100],
 	"theme": "Material-Theme.sublime-theme"
 }

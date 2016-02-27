@@ -1,4 +1,4 @@
-﻿{
+{
   "PathReplacements": [
 
   ],
@@ -27,7 +27,11 @@
 
   "IgnoredCodeIssues": [
     "^Keyword 'private' is redundant. This is the default modifier.$",
-    ".* should not separate words with an underscore.*"
+    ".* should not separate words with an underscore.*",
+    "Parameter can be IComparable",
+    "Convert to '\\?:' expression",
+    "Method '.+' can be made static.",
+    "Parameter can be declared with base type"
   ],
 
   "TestCommands": {
@@ -58,7 +62,7 @@
     * SharpDevelop
     * Whitesmiths
    */
-  "CSharpFormattingOptionsName" : "KRStyle",
+  "CSharpFormattingOptionsName" : "Custom",
 
   "CSharpFormattingOptions": {
     "alignElseInIfStatements": false,
@@ -221,7 +225,7 @@
     "spacesWithinTypeOfParentheses": false,
     "spacesWithinUsingParentheses": false,
     "spacesWithinWhileParentheses": false,
-    "statementBraceStyle": 3,
+    "statementBraceStyle": 1,
     "structBraceStyle": 3,
     "usingPlacement": 0,
     "whileNewLinePlacement": 0

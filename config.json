@@ -31,7 +31,10 @@
     "Parameter can be IComparable",
     "Convert to '\\?:' expression",
     "Method '.+' can be made static.",
-    "Parameter can be declared with base type"
+    "Parameter can be declared with base type",
+    "Parameter can be Singleton",
+    "should start with an upper case letter. \\(Rule 'Properties'\\)",
+    "Convert to '\\|=' expresssion"
   ],
 
   "TestCommands": {
@@ -86,7 +89,7 @@
     "constructorBraceStyle": 3,
     "destructorBraceStyle": 3,
     "elseIfNewLinePlacement": 2,
-    "elseNewLinePlacement": 1,
+    "elseNewLinePlacement": 2,
     "embeddedStatementPlacement": 1,
     "emptyLineFormatting": 2,
     "enumBraceStyle": 3,

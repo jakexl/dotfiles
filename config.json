@@ -34,7 +34,8 @@
     "Parameter can be declared with base type",
     "Parameter can be Singleton",
     "should start with an upper case letter. \\(Rule 'Properties'\\)",
-    "Convert to '\\|=' expresssion"
+    "Convert to '\\|=' expresssion",
+    "Convert to 'return' statement"
   ],
 
   "TestCommands": {

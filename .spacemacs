@@ -48,7 +48,7 @@ values."
      html
      org
      (colors :variables
-             colors-enable-rainbow-identifiers t
+             ;; colors-enable-rainbow-identifiers t
              colors-enable-nyan-cat-progress-bar (display-graphic-p)
              colors-theme-identifiers-sat&light '((naquadah . (50 80))
                                                   (monokai . (45 70))
@@ -136,11 +136,11 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Fira Code"
                                :size 14
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.3)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -283,22 +283,25 @@ This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (add-hook 'alchemist-mode-hook 'company-mode)
   (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
-  (add-hook 'hack-local-variables-hook (lambda () (setq truncate-lines t)))
+  (add-hook 'hack-local-variables-hook
+            (lambda ()
+              (setq truncate-lines t)
+              (setq line-spacing 0.2)))
   (setq powerline-default-separator 'arrow)
-  (custom-theme-set-faces
-   'monokai
-   '(font-lock-comment-face ((t (:slant italic :foreground "#75715E"))))
-   '(font-lock-string-face ((t (:slant italic :foreground "#E6DB74"))))
-   '(font-lock-doc-face ((t (:slant italic :foreground "#75715E"))))
-   '(ahs-face ((t (:foreground "black" :background "Orange1"))))
-   '(ahs-plugin-whole-buffer-face ((t (:foreground "gray80" :background "#474842"))))
-   ;; '(ahs-face ((t (:background "#373832"))))
-   ;; 'tangotango
-   ;; '(font-lock-comment-face ((t (:slant italic :foreground "#888a85"))))
-   ;; '(font-lock-doc-face ((t (:slant italic :foreground "#888a85"))))
-   ;; '(ahs-plugin-whole-buffer-face ((t (:background "#2e3434"))))
-   ;; '(highlight ((t (:background "#3e4444"))))
-   )
+  ;; (custom-theme-set-faces
+  ;;  'monokai
+  ;;  '(font-lock-comment-face ((t (:slant italic :foreground "#75715E"))))
+  ;;  ;; '(font-lock-string-face ((t (:slant italic :foreground "#E6DB74"))))
+  ;;  '(font-lock-doc-face ((t (:slant italic :foreground "#75715E"))))
+  ;;  '(ahs-face ((t (:foreground "black" :background "Orange1"))))
+  ;;  '(ahs-plugin-whole-buffer-face ((t (:foreground "gray80" :background "#474842"))))
+  ;;  ;; '(ahs-face ((t (:background "#373832"))))
+  ;;  ;; 'tangotango
+  ;;  ;; '(font-lock-comment-face ((t (:slant italic :foreground "#888a85"))))
+  ;;  ;; '(font-lock-doc-face ((t (:slant italic :foreground "#888a85"))))
+  ;;  ;; '(ahs-plugin-whole-buffer-face ((t (:background "#2e3434"))))
+  ;;  ;; '(highlight ((t (:background "#3e4444"))))
+  ;;  )
   (spacemacs/toggle-vi-tilde-fringe-off)
   (spacemacs/toggle-automatic-symbol-highlight-on)
   (global-git-commit-mode t)

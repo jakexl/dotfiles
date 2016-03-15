@@ -1,13 +1,15 @@
 {
+	"Seti_tabs_small": true,
 	"always_show_minimap_viewport": true,
 	"bold_folder_labels": true,
-	"color_scheme": "Packages/User/SublimeLinter/Monokai Bright (SL).tmTheme",
+	"color_scheme": "Packages/User/SublimeLinter/Monokai-Soft (SL).tmTheme",
 	"env":
 	{
 		"PATH": "/usr/local/bin"
 	},
 	"font_face": "Fira Code",
 	"font_size": 14,
+	"highlight_line": true,
 	"ignored_packages":
 	[
 		"Vintage"

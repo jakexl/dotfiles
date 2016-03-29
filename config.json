@@ -35,7 +35,9 @@
     "Parameter can be Singleton",
     "should start with an upper case letter. \\(Rule 'Properties'\\)",
     "Convert to '\\|=' expresssion",
-    "Convert to 'return' statement"
+    "Convert to 'return' statement",
+    "Convert to '\\&=' expresssion",
+    "Redundant 'else' keyword"
   ],
 
   "TestCommands": {

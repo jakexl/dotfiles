@@ -89,7 +89,7 @@
     "allowIfBlockInline": false,
     "allowOneLinedArrayInitialziers": true,
     "anonymousMethodBraceStyle": 3,
-    "arrayInitializerBraceStyle": 3,
+    "arrayInitializerBraceStyle": 1,
     "arrayInitializerWrapping": 0,
     "autoPropertyFormatting": 0,
     "catchNewLinePlacement": 2,

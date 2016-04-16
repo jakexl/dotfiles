@@ -49,7 +49,7 @@ values."
      org
      (colors :variables
              ;; colors-enable-rainbow-identifiers t
-             colors-enable-nyan-cat-progress-bar (display-graphic-p)
+             ;; colors-enable-nyan-cat-progress-bar (display-graphic-p)
              colors-theme-identifiers-sat&light '((naquadah . (50 80))
                                                   (monokai . (45 70))
                                                   (tangotango . (50 75))
@@ -120,6 +120,7 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         sanityinc-tomorrow-eighties
                          monokai
                          tangotango
                          leuven
@@ -130,7 +131,6 @@ values."
                          spacemacs-dark
                          solarized-light
                          solarized-dark
-                         monokai
                          zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -271,8 +271,12 @@ in `dotspacemacs/user-config'."
   ;; Restore Frame size and location, if we are using gui emacs
   (if window-system
       (progn
-        (add-hook 'after-init-hook 'load-framegeometry)
-        (add-hook 'kill-emacs-hook 'save-framegeometry))
+        (mac-auto-operator-composition-mode +1)
+        (setq initial-frame-alist
+              '((top . 1) (left . 700) (width . 212) (height . 80))))
+        ;; (set-frame-size (selected-frame) 212 80))
+        ;; (add-hook 'after-init-hook 'load-framegeometry)
+        ;; (add-hook 'kill-emacs-hook 'save-framegeometry))
     )
   (setq-default git-magit-status-fullscreen t)
   )
@@ -285,6 +289,7 @@ layers configuration. You are free to put any user code."
   (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
   (add-hook 'hack-local-variables-hook
             (lambda ()
+              (spacemacs/toggle-fill-column-indicator-on)
               (setq truncate-lines t)
               (setq line-spacing 0.2)))
   (setq powerline-default-separator 'arrow)
@@ -303,9 +308,10 @@ layers configuration. You are free to put any user code."
   ;;  ;; '(highlight ((t (:background "#3e4444"))))
   ;;  )
   (spacemacs/toggle-vi-tilde-fringe-off)
-  (spacemacs/toggle-automatic-symbol-highlight-on)
+  ;; (spacemacs/toggle-automatic-symbol-highlight-on)
   (global-git-commit-mode t)
   (setq-default omnisharp-server-executable-path "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
+  (setq-default fill-column 100)
   (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
   ;; -- Fringeline
   ;; Display - in the fringe line for EOF
@@ -373,3 +379,33 @@ geometry."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(compilation-message-face (quote default))
+ '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-tail-colors
+   (quote
+    (("#3E3D31" . 0)
+     ("#67930F" . 20)
+     ("#349B8D" . 30)
+     ("#21889B" . 50)
+     ("#968B26" . 60)
+     ("#A45E0A" . 70)
+     ("#A41F99" . 85)
+     ("#3E3D31" . 100))))
+ '(magit-diff-use-overlays nil)
+ '(pos-tip-background-color "#A6E22E")
+ '(pos-tip-foreground-color "#272822")
+ '(weechat-color-list
+   (unspecified "#272822" "#3E3D31" "#A20C41" "#F92672" "#67930F" "#A6E22E" "#968B26" "#E6DB74" "#21889B" "#66D9EF" "#A41F99" "#FD5FF0" "#349B8D" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(linum ((t (:background "#2d2d2d" :foreground "#999999" :slant normal :height 0.7)))))

@@ -1,27 +1,35 @@
-; 패키지 관리자
+										; 패키지 관리자
+
 (require 'package)
 (add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/"))
+			 '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
+										; 간단한 설정들
 
-; 간단한 설정들
 (setq make-backup-files nil)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(global-linum-mode t)
+(global-hl-line-mode t)
 
-; 폰트
+(desktop-save-mode 1)
+(when window-system (set-frame-size (selected-frame) 212 80))
+
+										; 폰트
+
 (add-to-list 'default-frame-alist '(font . "Fira Code-14"))
 (set-face-attribute 'default t :font "Fira Code-14")
 
-(tool-bar-mode -1)
+										; vi 에뮬레이션
 
-(desktop-save-mode 1)
-;; (when window-system (set-frame-size (selected-frame) 110 80))
-
-; vi 에뮬레이션
 (require 'evil)
+(require 'evil-leader)
+(global-evil-leader-mode)
 (evil-mode 1)
 
-; elixir 모드
-; alchemist
+										; elixir 모드
+										; alchemist
+
 (unless (package-installed-p 'alchemist)
   (package-install 'alchemist))
 
@@ -33,7 +41,8 @@
                (set (make-variable-buffer-local 'ruby-end-check-statement-modifiers) nil)
                (ruby-end-mode +1)))
 
-; smartparens 모드
+										; smartparens 모드
+
 (require 'smartparens-config)
 (smartparens-global-mode t)
 (show-smartparens-global-mode t)
@@ -49,87 +58,81 @@
 (sp-with-modes '(csharp-mode)
   (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET"))))
 
-; ido 모드
+										; ido 모드
+
 (require 'ido)
 (ido-mode t)
 
-; company 모드
+										; company 모드
+
 (add-hook 'after-init-hook 'global-company-mode)
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-omnisharp))
 
-; c# 모드
+										; c# 모드
+
 (add-hook 'csharp-mode-hook 'omnisharp-mode)
 (add-hook 'csharp-mode-hook 'evil-smartparens-mode)
+(add-hook 'find-file-hook
+		  (lambda ()
+			(set-process-query-on-exit-flag (get-process "Omni-Server") nil)
+			(set-process-query-on-exit-flag (get-process "Omni-Server<1>") nil)))
 
-; 키보드
+										; 키보드
+
+(global-set-key "\M-\\" 'evil-window-vsplit)
+(global-set-key "\M-p" 'projectile-find-file)
+(global-set-key "\M-s" 'save-buffer)
+(global-set-key "\M-w" 'evil-window-delete)
 (evil-define-key 'normal omnisharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
+(evil-leader/set-leader "<SPC>")
+(evil-leader/set-key "b" 'ido-switch-buffer)
+(evil-leader/set-key "g" 'magit-status)
+(evil-leader/set-key "q" 'save-buffers-kill-terminal)
+(evil-leader/set-key "r" 'eval-region)
 
-; custom 모드
+										; whitespace 모드
+
+(require 'whitespace)
+(setq whitespace-style '(face empty space-after-tab space-before-tab trailing))
+(global-whitespace-mode t)
+
+										; fill-column-indicator
+
+(require 'fill-column-indicator)
+(setq-default fill-column 100)
+(add-hook 'find-file-hook 'fci-mode)
+
+										; projectile
+
+(projectile-global-mode)
+(setq projectile-enable-caching t)
+
+										; custom 모드
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
- '(compilation-message-face (quote default))
  '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
  '(custom-safe-themes
    (quote
-	("70b9c3d480948a3d007978b29e31d6ab9d7e259105d558c41f8b9532c13219aa" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "6c62b1cd715d26eb5aa53843ed9a54fc2b0d7c5e0f5118d4efafa13d7715c56e" default)))
- '(fci-rule-color "#3E3D31")
- '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
- '(highlight-tail-colors
-   (quote
-	(("#3E3D31" . 0)
-	 ("#67930F" . 20)
-	 ("#349B8D" . 30)
-	 ("#21889B" . 50)
-	 ("#968B26" . 60)
-	 ("#A45E0A" . 70)
-	 ("#A41F99" . 85)
-	 ("#3E3D31" . 100))))
- '(magit-diff-use-overlays nil)
+	("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
+ '(desktop-restore-eager 3)
+ '(linum-format "%4d")
  '(omnisharp-server-executable-path
    "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
- '(pos-tip-background-color "#A6E22E")
- '(pos-tip-foreground-color "#272822")
- '(tab-width 4)
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-	((20 . "#F92672")
-	 (40 . "#CF4F1F")
-	 (60 . "#C26C0F")
-	 (80 . "#E6DB74")
-	 (100 . "#AB8C00")
-	 (120 . "#A18F00")
-	 (140 . "#989200")
-	 (160 . "#8E9500")
-	 (180 . "#A6E22E")
-	 (200 . "#729A1E")
-	 (220 . "#609C3C")
-	 (240 . "#4E9D5B")
-	 (260 . "#3C9F79")
-	 (280 . "#A1EFE4")
-	 (300 . "#299BA6")
-	 (320 . "#2896B5")
-	 (340 . "#2790C3")
-	 (360 . "#66D9EF"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (unspecified "#272822" "#3E3D31" "#A20C41" "#F92672" "#67930F" "#A6E22E" "#968B26" "#E6DB74" "#21889B" "#66D9EF" "#A41F99" "#FD5FF0" "#349B8D" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
+ '(tab-width 4))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(linum ((t (:background "#2d2d2d" :foreground "#999999" :slant normal :height 0.7)))))
+										; 칼라 테마 (커스텀 보다 밑에 있어야 함)
 
-; 칼라 테마 (커스텀 보다 밑에 있어야 함)
 (require 'color-theme-sanityinc-tomorrow)
 (color-theme-sanityinc-tomorrow-eighties)
 ;; (load-theme 'monokai t)
 ;(load-theme 'leuven t)
-

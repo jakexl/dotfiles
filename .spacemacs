@@ -242,7 +242,7 @@ values."
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
-   dotspacemacs-highlight-delimiters 'all
+   dotspacemacs-highlight-delimiters 'current
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
    dotspacemacs-persistent-server nil
@@ -286,13 +286,15 @@ This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (add-hook 'alchemist-mode-hook 'company-mode)
   (add-hook 'omnisharp-mode-hook 'set-exit-flags)
+  (add-hook 'csharp-mode-hook 'spacemacs/toggle-syntax-checking-on)
   (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
   (add-hook 'hack-local-variables-hook
             (lambda ()
-              (spacemacs/toggle-fill-column-indicator-on)
+              ;; (spacemacs/toggle-fill-column-indicator-on)
               (setq truncate-lines t)
               (setq tab-width 4)
-              (setq line-spacing 0.2)))
+              (setq-default fill-column 100)
+              (setq line-spacing 1)))
   (setq powerline-default-separator 'arrow)
   ;; (custom-theme-set-faces
   ;;  'monokai
@@ -316,8 +318,24 @@ layers configuration. You are free to put any user code."
   (setq whitespace-style '(face empty space-after-tab space-before-tab trailing))
   (global-whitespace-mode 1)
 
+  ;; smartparens
+  (show-smartparens-global-mode -1)
+
+  ;; evil-escape
+  (setq evil-escape-delay 0.4)
+  (setq evil-escape-key-sequence (kbd "fj"))
+
+  ;; camelcaseaction
+  (spacemacs/toggle-camel-case-motion-globally-on)
+
+  ;; omnisharp
   (setq-default omnisharp-server-executable-path "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
-  (setq-default fill-column 100)
+  (evil-define-key 'normal csharp-mode-map (kbd "<f12>") #'omnisharp-go-to-definition)
+  (evil-define-key 'normal csharp-mode-map (kbd "<f11>") #'my-code-format)
+
+  ;; tab
+  (setq-default indent-tabs-mode t)
+
   (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
   ;; -- Fringeline
   ;; Display - in the fringe line for EOF
@@ -344,13 +362,15 @@ layers configuration. You are free to put any user code."
 
 ;; 프로세스 죽일지 물어보는 거 방지
 (defun set-exit-flags ()
-  (set-exit-flag "Omni-Server")
-  (set-exit-flag "Omni-Server<1>"))
-(defun set-exit-flag (process)
-  (let ((omni-server (get-process process)))
-	(if omni-server
-		(set-process-query-on-exit-flag omni-server nil)
-      nil)))
+  (dolist (elem (process-list))
+    (set-process-query-on-exit-flag elem nil)))
+
+;; c# 코드를 포맷
+(defun my-code-format ()
+  "c# 코드를 포맷하고 탭으로 바꾼다"
+  (interactive)
+  (omnisharp-code-format)
+  (tabify (point-min) (point-max)))
 
 (defun save-framegeometry ()
   "Gets the current frame's geometry and saves to ~/.emacs.d/framegeometry."

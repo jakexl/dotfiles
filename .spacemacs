@@ -33,7 +33,6 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     ;; syntax-checking
      ;; version-control
      markdown
      syntax-checking
@@ -286,11 +285,13 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (add-hook 'alchemist-mode-hook 'company-mode)
+  (add-hook 'omnisharp-mode-hook 'set-exit-flags)
   (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
   (add-hook 'hack-local-variables-hook
             (lambda ()
               (spacemacs/toggle-fill-column-indicator-on)
               (setq truncate-lines t)
+              (setq tab-width 4)
               (setq line-spacing 0.2)))
   (setq powerline-default-separator 'arrow)
   ;; (custom-theme-set-faces
@@ -307,15 +308,20 @@ layers configuration. You are free to put any user code."
   ;;  ;; '(ahs-plugin-whole-buffer-face ((t (:background "#2e3434"))))
   ;;  ;; '(highlight ((t (:background "#3e4444"))))
   ;;  )
-  (spacemacs/toggle-vi-tilde-fringe-off)
   ;; (spacemacs/toggle-automatic-symbol-highlight-on)
-  (global-git-commit-mode t)
+  (spacemacs/toggle-vi-tilde-fringe-off)
+  (global-git-commit-mode 1)
+
+  ;; whitespace mode
+  (setq whitespace-style '(face empty space-after-tab space-before-tab trailing))
+  (global-whitespace-mode 1)
+
   (setq-default omnisharp-server-executable-path "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
   (setq-default fill-column 100)
   (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
   ;; -- Fringeline
   ;; Display - in the fringe line for EOF
-  (setq-default indicate-empty-lines t)
+  ;; (setq-default indicate-empty-lines t)
   ;; Set the fringe bitmaps as emacs default values
   (setq-default fringe-indicator-alist
                 '((truncation left-arrow right-arrow)
@@ -335,6 +341,16 @@ layers configuration. You are free to put any user code."
                   (empty-line . empty-line)
                   (unknown . question-mark)))
   )
+
+;; 프로세스 죽일지 물어보는 거 방지
+(defun set-exit-flags ()
+  (set-exit-flag "Omni-Server")
+  (set-exit-flag "Omni-Server<1>"))
+(defun set-exit-flag (process)
+  (let ((omni-server (get-process process)))
+	(if omni-server
+		(set-process-query-on-exit-flag omni-server nil)
+      nil)))
 
 (defun save-framegeometry ()
   "Gets the current frame's geometry and saves to ~/.emacs.d/framegeometry."

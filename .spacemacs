@@ -26,9 +26,7 @@ values."
      ;; auto-completion
      ;; better-defaults
      emacs-lisp
-     ;; git
      ;; markdown
-     ;; org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -96,7 +94,7 @@ values."
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'hybrid
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -137,7 +135,7 @@ values."
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Fira Code"
                                :size 14
-                               :weight normal
+                               :weight light
                                :width normal
                                :powerline-scale 1.3)
    ;; The leader key
@@ -235,7 +233,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers 'relative
+   dotspacemacs-line-numbers t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -285,14 +283,22 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (add-hook 'alchemist-mode-hook 'company-mode)
+  ;; (add-hook 'elixir-mode-hook
+  ;;           (lambda ()
+  ;;             (setq indent-tabs-mode nil)))
   (add-hook 'omnisharp-mode-hook 'set-exit-flags)
-  (add-hook 'csharp-mode-hook 'spacemacs/toggle-syntax-checking-on)
+  (add-hook 'csharp-mode-hook
+            (lambda ()
+              (spacemacs/toggle-syntax-checking-on)
+              (setq tab-width 4)
+              (setq indent-tabs-mode t)
+              ;; (whitespace-mode)
+              ))
   (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
   (add-hook 'hack-local-variables-hook
             (lambda ()
               ;; (spacemacs/toggle-fill-column-indicator-on)
               (setq truncate-lines t)
-              (setq tab-width 4)
               (setq-default fill-column 100)
               (setq line-spacing 1)))
   (setq powerline-default-separator 'arrow)
@@ -315,8 +321,8 @@ layers configuration. You are free to put any user code."
   (global-git-commit-mode 1)
 
   ;; whitespace mode
-  (setq whitespace-style '(face empty space-after-tab space-before-tab trailing))
-  (global-whitespace-mode 1)
+  (setq-default whitespace-style '(face empty space-after-tab space-before-tab trailing))
+  (global-whitespace-mode)
 
   ;; smartparens
   (show-smartparens-global-mode -1)
@@ -333,8 +339,16 @@ layers configuration. You are free to put any user code."
   (evil-define-key 'normal csharp-mode-map (kbd "<f12>") #'omnisharp-go-to-definition)
   (evil-define-key 'normal csharp-mode-map (kbd "<f11>") #'my-code-format)
 
-  ;; tab
-  (setq-default indent-tabs-mode t)
+  ;; 인덴트는 스페이스로
+  (setq-default indent-tabs-mode nil)
+
+  ;; evil-search-module
+  (setq evil-search-module 'evil-search)
+
+  ;; 키 설정
+  (global-set-key (kbd "s-b") 'helm-mini)
+  (global-set-key (kbd "f12") 'omnisharp-go-to-definition)
+  (global-set-key (kbd "f9") 'omnisharp-build-in-emacs)
 
   (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
   ;; -- Fringeline

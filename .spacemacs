@@ -23,7 +23,9 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ;; auto-completion
+     '(auto-completion :variables
+                        auto-completion-enable-help-tooltip t
+                        auto-completion-enable-snippets-in-popup t)
      ;; better-defaults
      emacs-lisp
      ;; markdown
@@ -34,7 +36,6 @@ values."
      ;; version-control
      markdown
      syntax-checking
-     auto-completion
      ;; company-mode
      erlang
      elixir
@@ -117,10 +118,10 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         leuven
                          sanityinc-tomorrow-eighties
                          monokai
                          tangotango
-                         leuven
                          sanityinc-solarized-light
                          naquadah
                          solarized-light
@@ -270,7 +271,7 @@ in `dotspacemacs/user-config'."
       (progn
         (mac-auto-operator-composition-mode +1)
         (setq initial-frame-alist
-              '((top . 1) (left . 700) (width . 212) (height . 80))))
+              '((top . 1) (left . 570) (width . 246) (height . 80))))
         ;; (set-frame-size (selected-frame) 212 80))
         ;; (add-hook 'after-init-hook 'load-framegeometry)
         ;; (add-hook 'kill-emacs-hook 'save-framegeometry))
@@ -282,7 +283,7 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  (add-hook 'alchemist-mode-hook 'company-mode)
+  ;; (add-hook 'alchemist-mode-hook 'company-mode)
   ;; (add-hook 'elixir-mode-hook
   ;;           (lambda ()
   ;;             (setq indent-tabs-mode nil)))
@@ -347,10 +348,15 @@ layers configuration. You are free to put any user code."
 
   ;; 키 설정
   (global-set-key (kbd "s-b") 'helm-mini)
-  (global-set-key (kbd "f12") 'omnisharp-go-to-definition)
-  (global-set-key (kbd "f9") 'omnisharp-build-in-emacs)
+  (global-set-key (kbd "s-p") 'helm-projectile)
+  (global-set-key (kbd "<f12>") 'omnisharp-go-to-definition)
+  (global-set-key (kbd "<f9>") 'omnisharp-build-in-emacs)
+  ;; (global-set-key (kbd "<tab>") #'yas-expand)
 
-  (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
+  ;; auto-complete
+  (global-company-mode)
+
+  ;; (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
   ;; -- Fringeline
   ;; Display - in the fringe line for EOF
   ;; (setq-default indicate-empty-lines t)
@@ -458,4 +464,4 @@ geometry."
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(linum ((t (:background "#2d2d2d" :foreground "#999999" :slant normal :height 0.7)))))
+ )

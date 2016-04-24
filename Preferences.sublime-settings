@@ -13,6 +13,7 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
+		"Vintageous",
 		"Vintage"
 	],
 	"indent_guide_options":

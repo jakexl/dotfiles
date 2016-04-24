@@ -23,9 +23,10 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     '(auto-completion :variables
+     (auto-completion :variables
                         auto-completion-enable-help-tooltip t
                         auto-completion-enable-snippets-in-popup t)
+     ;; auto-completion
      ;; better-defaults
      emacs-lisp
      ;; markdown

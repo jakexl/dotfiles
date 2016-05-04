@@ -33,6 +33,11 @@
   (package-install 'window-numbering))
 (unless (package-installed-p 'magit)
   (package-install 'magit))
+(unless (package-installed-p 'fill-column-indicator)
+  (package-install 'fill-column-indicator))
+(unless (package-installed-p 'ag)
+  (package-install 'ag))
+
 
 ; 가능하면 customize를 이용한다
                                         ; 폰트
@@ -50,6 +55,7 @@
 
                                         ; alchemist 패키지
 
+(add-hook 'elixir-mode-hook 'alchemist-mode)
 (add-hook 'alchemist-mode-hook
           (lambda ()
             (define-key alchemist-mode-map [f12] 'alchemist-goto-definition-at-point)))
@@ -93,6 +99,8 @@
 (global-set-key [escape] 'keyboard-escape-quit)
 (global-set-key (kbd "s-e") 'isearch-forward-symbol-at-point)
 (global-set-key (kbd "s-f") 'isearch-forward)
+(global-set-key (kbd "s-g") 'isearch-repeat-forward)
+(global-set-key (kbd "s-F") 'projectile-ag)
 (global-set-key (kbd "s-q") 'save-buffers-kill-terminal)
 (global-set-key (kbd "s-v") 'yank)
 (global-set-key (kbd "s-c") 'kill-ring-save)
@@ -105,6 +113,7 @@
 (global-set-key (kbd "s-s") 'save-some-buffers)
 (global-set-key (kbd "s-Z") 'undo-tree-redo)
 (global-set-key (kbd "s-\\") 'my-split-window)
+(global-set-key (kbd "s-|") 'fci-mode)
 (global-set-key (kbd "s-1") 'select-window-1)
 (global-set-key (kbd "s-2") 'select-window-2)
 (global-set-key (kbd "s-3") 'select-window-3)
@@ -113,6 +122,7 @@
 (global-set-key (kbd "s-,") 'customize)
 (global-set-key (kbd "<f1>") 'helm-apropos)
 (global-set-key (kbd "<f4>") 'flycheck-next-error)
+(global-set-key (kbd "<f9>") 'alchemist-mix-test)
 
 (define-key isearch-mode-map (kbd "s-f") 'isearch-repeat-forward)
 (define-key isearch-mode-map (kbd "s-F") 'isearch-repeat-backward)
@@ -178,10 +188,11 @@
  '(indent-tabs-mode nil)
  '(initial-frame-alist
    (quote
-    ((left . 600)
+    ((left . 700)
      (top . 20)
-     (width . 220)
+     (width . 210)
      (height . 80))))
+ '(linum-format "%4d")
  '(mac-auto-operator-composition-mode t)
  '(mac-command-modifier (quote super))
  '(mac-option-modifier (quote meta))

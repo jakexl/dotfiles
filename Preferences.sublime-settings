@@ -13,8 +13,8 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"Vintageous",
-		"Vintage"
+		"Vintage",
+		"Vintageous"
 	],
 	"indent_guide_options":
 	[
@@ -28,12 +28,19 @@
 	"material_theme_small_tab": true,
 	"material_theme_tabs_separator": true,
 	"overlay_scroll_bars": "enabled",
+	"paths":
+	{
+		"osx":
+		[
+			"/usr/local/bin"
+		]
+	},
 	"rulers":
 	[
 		100
 	],
 	"save_on_focus_lost": true,
 	"show_encoding": true,
-	"theme": "Watson.sublime-theme",
+	"theme": "Material-Theme.sublime-theme",
 	"vintageous_magic": false
 }

@@ -1,166 +1,202 @@
-										; 패키지 관리자
-
 (require 'package)
 (add-to-list 'package-archives
-			 '("melpa" . "https://melpa.org/packages/"))
+             '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
-										; 간단한 설정들
 
-(setq make-backup-files nil)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(global-linum-mode +1)
-(global-hl-line-mode +1)
-(mac-auto-operator-composition-mode +1)
+                                        ; 패키지 인스톨
 
-(desktop-save-mode 1)
-(when window-system (set-frame-size (selected-frame) 212 80))
-
-										; 폰트
-
-(add-to-list 'default-frame-alist '(font . "Fira Code-14"))
-(set-face-attribute 'default t :font "Fira Code-14")
-
-										; vi 에뮬레이션
-
-(require 'evil)
-(require 'evil-leader)
-(global-evil-leader-mode)
-(evil-mode 1)
-
-										; elixir 모드
-										; alchemist
-
+(unless (package-installed-p 'color-theme-sanityinc-tomorrow)
+  (package-install 'color-theme-sanityinc-tomorrow))
 (unless (package-installed-p 'alchemist)
   (package-install 'alchemist))
+(unless (package-installed-p 'company)
+  (package-install 'company))
+(unless (package-installed-p 'elixir-mode)
+  (package-install 'elixir-mode))
+(unless (package-installed-p 'flycheck-elixir)
+  (package-install 'flycheck-elixir))
+(unless (package-installed-p 'projectile)
+  (package-install 'projectile))
+(unless (package-installed-p 'helm)
+  (package-install 'helm))
+(unless (package-installed-p 'helm-projectile)
+  (package-install 'helm-projectile))
+(unless (package-installed-p 'omnisharp)
+  (package-install 'omnisharp))
+(unless (package-installed-p 'csharp-mode)
+  (package-install 'csharp-mode))
+(unless (package-installed-p 'undo-tree)
+  (package-install 'undo-tree))
+(unless (package-installed-p 'spaceline)
+  (package-install 'spaceline))
+(unless (package-installed-p 'window-numbering)
+  (package-install 'window-numbering))
+(unless (package-installed-p 'magit)
+  (package-install 'magit))
 
-(require 'elixir-mode)
-(add-hook 'elixir-mode-hook
-		  (lambda ()
-			(set (make-variable-buffer-local 'ruby-end-expand-keywords-before-re)
-				 "\\(?:^\\|\\s-+\\)\\(?:do\\)")
-			(set (make-variable-buffer-local 'ruby-end-check-statement-modifiers) nil)
-			(ruby-end-mode +1)))
+; 가능하면 customize를 이용한다
+                                        ; 폰트
 
-										; smartparens 모드
+(set-default-font "-*-Fira Code-light-normal-normal-*-14-*-*-*-m-0-iso10646-1")
 
-(require 'smartparens-config)
-(smartparens-global-mode t)
-(show-smartparens-global-mode t)
-(sp-with-modes '(elixir-mode)
-  (sp-local-pair "fn" "end"
-         :when '(("SPC" "RET"))
-         :actions '(insert navigate))
-  (sp-local-pair "do" "end"
-         :when '(("SPC" "RET"))
-         :post-handlers '(sp-ruby-def-post-handler)
-         :actions '(insert navigate)))
-
-(sp-with-modes '(csharp-mode)
-  (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET"))))
-
-										; ido 모드
-
-(require 'ido)
-(ido-mode t)
-
-										; company 모드
-
-(add-hook 'after-init-hook #'global-company-mode)
-(eval-after-load 'company
-  '(progn
-	 (define-key company-active-map (kbd "<tab>") 'company-select-next)
-	 (define-key company-active-map (kbd "<S-tab>") 'company-select-previous)
-	 (add-to-list 'company-backends 'company-omnisharp)
-	 (company-flx-mode +1)))
-
-										; c# 모드
-
-(add-hook 'csharp-mode-hook 'omnisharp-mode)
-(add-hook 'csharp-mode-hook 'evil-smartparens-mode)
-(add-hook 'csharp-mode-hook 'set-exit-flags t)
-(defun set-exit-flags ()
-  (set-exit-flag "Omni-Server")
-  (set-exit-flag "Omni-Server<1>"))
-(defun set-exit-flag (process)
-  (let ((omni-server (get-process process)))
-	(if omni-server
-		(set-process-query-on-exit-flag omni-server nil)
-	  nil)))
-(add-hook 'omnisharp-mode-hook 'set-exit-flags)
-
-										; 키보드
-
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key "\M-\\" 'evil-window-vsplit)
-(global-set-key "\M-b" 'helm-buffers-list)
-(global-set-key "\M-p" 'projectile-find-file)
-(global-set-key "\M-s" 'save-buffer)
-(global-set-key "\M-w" 'evil-window-delete)
-(evil-define-key 'normal omnisharp-mode-map (kbd "<f2>") 'omnisharp-rename)
-(evil-define-key 'normal omnisharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
-(evil-define-key 'normal omnisharp-mode-map (kbd "<S-f12>") 'omnisharp-find-usages)
-(evil-leader/set-leader "<SPC>")
-(evil-leader/set-key "b" 'ido-switch-buffer)
-(evil-leader/set-key "h" 'evil-window-left)
-(evil-leader/set-key "l" 'evil-window-right)
-(evil-leader/set-key "q" 'save-buffers-kill-terminal)
-(evil-leader/set-key "r" 'eval-region)
-
-										; whitespace 모드
-
-(require 'whitespace)
-(setq whitespace-style '(face empty space-after-tab space-before-tab trailing))
-(global-whitespace-mode t)
-
-										; fill-column-indicator
-
-(require 'fill-column-indicator)
-(setq-default fill-column 100)
-(add-hook 'find-file-hook #'fci-mode)
-
-										; projectile
-
-(projectile-global-mode)
-(setq projectile-enable-caching t)
-
-										; helm
-
-(require 'helm-config)
+(window-numbering-mode)
 (helm-mode 1)
+(setq-default cursor-in-non-selected-windows 'hollow)
 
-										; spaceline
+                                        ; company 모드
 
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-omnisharp))
+
+                                        ; alchemist 패키지
+
+(add-hook 'alchemist-mode-hook
+          (lambda ()
+            (define-key alchemist-mode-map [f12] 'alchemist-goto-definition-at-point)))
+
+                                        ; elixir 모드
+
+                                        ; c# 모드
+
+(add-hook 'csharp-mode-hook
+          (lambda ()
+            (setq tab-width 4)
+            (setq indent-tabs-mode t)
+            (electric-pair-mode)
+            (setq omnisharp-server-executable-path "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
+            (omnisharp-mode)
+            (define-key csharp-mode-map [f12] 'omnisharp-go-to-definition-other-window)))
+(add-hook 'omnisharp-mode-hook 'set-exit-flags)
+(defun set-exit-flags ()
+  (dolist (proc (process-list))
+    (set-process-query-on-exit-flag proc nil)))
+
+                                        ; spaceline
 (require 'spaceline-config)
-(spaceline-spacemacs-theme)
-(setq spaceline-highlight-face-func #'spaceline-highlight-face-evil-state)
+(spaceline-emacs-theme)
 
-										; custom 모드
+                                        ; smooth-scrolling
+(setq auto-window-vscroll nil
+      scroll-margin 5
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1)
+
+                                        ; 키
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "s-b") 'helm-mini)
+(global-set-key (kbd "s-p") 'helm-projectile)
+(global-set-key (kbd "s-o") 'helm-find-files)
+(global-set-key (kbd "s-/") 'my-comment)
+(global-set-key [escape] 'keyboard-escape-quit)
+(global-set-key (kbd "s-e") 'isearch-forward-symbol-at-point)
+(global-set-key (kbd "s-f") 'isearch-forward)
+(global-set-key (kbd "s-q") 'save-buffers-kill-terminal)
+(global-set-key (kbd "s-v") 'yank)
+(global-set-key (kbd "s-c") 'kill-ring-save)
+(global-set-key (kbd "s-a") 'mark-whole-buffer)
+(global-set-key (kbd "s-x") 'kill-region)
+(global-set-key (kbd "s-w") 'delete-window)
+(global-set-key (kbd "s-W") 'delete-frame)
+(global-set-key (kbd "s-n") 'make-frame)
+(global-set-key (kbd "s-z") 'undo-tree-undo)
+(global-set-key (kbd "s-s") 'save-some-buffers)
+(global-set-key (kbd "s-Z") 'undo-tree-redo)
+(global-set-key (kbd "s-\\") 'my-split-window)
+(global-set-key (kbd "s-1") 'select-window-1)
+(global-set-key (kbd "s-2") 'select-window-2)
+(global-set-key (kbd "s-3") 'select-window-3)
+(global-set-key (kbd "s-4") 'select-window-4)
+(global-set-key (kbd "s-=") 'indent-region)
+(global-set-key (kbd "s-,") 'customize)
+(global-set-key (kbd "<f1>") 'helm-apropos)
+(global-set-key (kbd "<f4>") 'flycheck-next-error)
+
+(define-key isearch-mode-map (kbd "s-f") 'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd "s-F") 'isearch-repeat-backward)
+
+                                        ; 내 함수들
+(add-hook 'focus-out-hook 'my-save)
+(defun my-save ()
+  (interactive)
+  (save-some-buffers t))
+
+(defun my-split-window ()
+  (interactive)
+  (delete-other-windows)
+  (split-window-right))
+
+(defun my-comment ()
+  (interactive)
+  (let ((start (line-beginning-position))
+        (end (line-end-position)))
+    (when (region-active-p)
+      (setq start (save-excursion
+                    (goto-char (region-beginning))
+                    (beginning-of-line)
+                    (point))
+            end (save-excursion
+                  (goto-char (region-end))
+                  (end-of-line)
+                  (point))))
+    (comment-or-uncomment-region start end)))
+
+                                        ; customize
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(backup-directory-alist (quote (("." . "~/Downloads/backup"))))
+ '(column-number-mode t)
+ '(company-idle-delay 0.1)
+ '(company-minimum-prefix-length 2)
+ '(company-tooltip-flip-when-above t)
+ '(cua-mode nil nil (cua-base))
+ '(cursor-type (quote (bar . 3)))
  '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
  '(custom-safe-themes
    (quote
-	("e87a2bd5abc8448f8676365692e908b709b93f2d3869c42a4371223aab7d9cf8" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
- '(desktop-restore-eager 3)
- '(linum-format "%4d")
- '(omnisharp-server-executable-path
-   "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
- '(powerline-default-separator (quote arrow))
- '(powerline-height 20)
- '(tab-width 4))
+    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
+ '(desktop-save-mode t)
+ '(dired-use-ls-dired nil)
+ '(fill-column 100)
+ '(global-company-mode t)
+ '(global-hl-line-mode t)
+ '(global-linum-mode t)
+ '(global-undo-tree-mode t)
+ '(global-whitespace-mode t)
+ '(helm-M-x-fuzzy-match t)
+ '(helm-apropos-fuzzy-match t)
+ '(helm-buffers-fuzzy-matching t)
+ '(helm-mode t)
+ '(helm-recentf-fuzzy-match t)
+ '(helm-split-window-in-side-p t)
+ '(indent-tabs-mode nil)
+ '(initial-frame-alist
+   (quote
+    ((left . 600)
+     (top . 20)
+     (width . 220)
+     (height . 80))))
+ '(mac-auto-operator-composition-mode t)
+ '(mac-command-modifier (quote super))
+ '(mac-option-modifier (quote meta))
+ '(mouse-wheel-scroll-amount (quote (2 ((shift) . 1) ((control)))))
+ '(projectile-global-mode t)
+ '(scroll-bar-mode nil)
+ '(shell-file-name "/bin/bash")
+ '(tab-width 2)
+ '(tool-bar-mode nil)
+ '(whitespace-style
+   (quote
+    (face empty space-after-tab space-before-tab trailing))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(linum ((t (:background "#2d2d2d" :foreground "#999999" :slant normal :height 0.7))))
- '(sp-show-pair-match-face ((t (:inherit default :underline (:color "yellow" :style wave))))))
-										; 칼라 테마 (커스텀 보다 밑에 있어야 함)
-
-(require 'color-theme-sanityinc-tomorrow)
-(color-theme-sanityinc-tomorrow-eighties)
+ )

@@ -271,8 +271,9 @@ in `dotspacemacs/user-config'."
   (if window-system
       (progn
         (mac-auto-operator-composition-mode +1)
-        (setq initial-frame-alist
-              '((top . 1) (left . 570) (width . 246) (height . 80))))
+        )
+        ;; (setq initial-frame-alist
+        ;;       '((top . 1) (left . 570) (width . 246) (height . 73))))
         ;; (set-frame-size (selected-frame) 212 80))
         ;; (add-hook 'after-init-hook 'load-framegeometry)
         ;; (add-hook 'kill-emacs-hook 'save-framegeometry))
@@ -348,8 +349,19 @@ layers configuration. You are free to put any user code."
   (setq evil-search-module 'evil-search)
 
   ;; 키 설정
+  (global-set-key (kbd "s-1") 'select-window-1)
+  (global-set-key (kbd "s-2") 'select-window-2)
+  (global-set-key (kbd "s-3") (lambda ()
+                                (interactive)
+                                (delete-other-windows)
+                                (split-window-right-and-focus)))
   (global-set-key (kbd "s-b") 'helm-mini)
   (global-set-key (kbd "s-p") 'helm-projectile)
+  (global-set-key (kbd "s-t") (lambda ()
+                                (interactive)
+                                (call-interactively (key-binding ""))
+                                (call-interactively (key-binding ",ta"))))
+  (global-set-key (kbd "s-/") 'spacemacs/comment-or-uncomment-lines)
   (global-set-key (kbd "<f12>") 'omnisharp-go-to-definition)
   (global-set-key (kbd "<f9>") 'omnisharp-build-in-emacs)
   ;; (global-set-key (kbd "<tab>") #'yas-expand)
@@ -453,6 +465,13 @@ geometry."
      ("#A45E0A" . 70)
      ("#A41F99" . 85)
      ("#3E3D31" . 100))))
+ '(initial-frame-alist
+   (quote
+    ((vertical-scroll-bars)
+     (left . 570)
+     (top . 20)
+     (width . 246)
+     (height . 77))))
  '(magit-diff-use-overlays nil)
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
@@ -464,5 +483,4 @@ geometry."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- )
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

@@ -23,47 +23,33 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     (auto-completion :variables
-                        auto-completion-enable-help-tooltip t
-                        auto-completion-enable-snippets-in-popup t)
      ;; auto-completion
      ;; better-defaults
      emacs-lisp
+     ;; git
      ;; markdown
+     ;; org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
+     ;; syntax-checking
      ;; version-control
-     markdown
-     syntax-checking
-     ;; company-mode
-     erlang
-     elixir
-     csharp
-     git
-     dash
      osx
-     html
-     org
-     (colors :variables
-             ;; colors-enable-rainbow-identifiers t
-             ;; colors-enable-nyan-cat-progress-bar (display-graphic-p)
-             colors-theme-identifiers-sat&light '((naquadah . (50 80))
-                                                  (monokai . (45 70))
-                                                  (tangotango . (50 75))
-                                                  (sanityinc-solarized-light . (70 45)))
-             )
-     ;; editorconfig
-     themes-megapack
-     ;; perspectives
-     ;; frame-geometry
+     csharp
+     elixir
+     syntax-checking
+     better-defaults
+     (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip nil)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(base16-theme)
+   dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -96,7 +82,7 @@ values."
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'hybrid
+   dotspacemacs-editing-style 'emacs
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -118,18 +104,12 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(
-                         sanityinc-tomorrow-eighties
-                         leuven
-                         monokai
-                         tangotango
-                         sanityinc-solarized-light
-                         naquadah
-                         solarized-light
-                         spacemacs-light
+   dotspacemacs-themes '(leuven
                          spacemacs-dark
+                         spacemacs-light
                          solarized-light
                          solarized-dark
+                         monokai
                          zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -139,7 +119,7 @@ values."
                                :size 14
                                :weight light
                                :width normal
-                               :powerline-scale 1.3)
+                               :powerline-scale 1.1)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -238,7 +218,7 @@ values."
    dotspacemacs-line-numbers t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -264,223 +244,37 @@ values."
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
-It is called immediately after `dotspacemacs/init'.  You are free to put almost
-any user code here.  The exception is org related code, which should be placed
-in `dotspacemacs/user-config'."
-  ;; Restore Frame size and location, if we are using gui emacs
-  (if window-system
-      (progn
-        (mac-auto-operator-composition-mode +1)
-        )
-        ;; (setq initial-frame-alist
-        ;;       '((top . 1) (left . 570) (width . 246) (height . 73))))
-        ;; (set-frame-size (selected-frame) 212 80))
-        ;; (add-hook 'after-init-hook 'load-framegeometry)
-        ;; (add-hook 'kill-emacs-hook 'save-framegeometry))
-    )
-  (setq-default git-magit-status-fullscreen t)
+It is called immediately after `dotspacemacs/init', before layer configuration
+executes.
+ This function is mostly useful for variables that need to be set
+before packages are loaded. If you are unsure, you should try in setting them in
+`dotspacemacs/user-config' first."
+  (setq initial-frame-alist '((top . 30) (left . 700) (width . 212) (height . 81)))
   )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
-layers configuration. You are free to put any user code."
-  ;; (add-hook 'alchemist-mode-hook 'company-mode)
-  ;; (add-hook 'elixir-mode-hook
-  ;;           (lambda ()
-  ;;             (setq indent-tabs-mode nil)))
-  (add-hook 'omnisharp-mode-hook 'set-exit-flags)
-  (add-hook 'csharp-mode-hook
-            (lambda ()
-              (spacemacs/toggle-syntax-checking-on)
-              (setq tab-width 4)
-              (setq indent-tabs-mode t)
-              ;; (whitespace-mode)
-              ))
-  (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
-  (add-hook 'hack-local-variables-hook
-            (lambda ()
-              ;; (spacemacs/toggle-fill-column-indicator-on)
-              (setq truncate-lines t)
-              (setq-default fill-column 100)
-              (setq line-spacing 1)))
-  (setq powerline-default-separator 'arrow)
-  ;; (custom-theme-set-faces
-  ;;  'monokai
-  ;;  '(font-lock-comment-face ((t (:slant italic :foreground "#75715E"))))
-  ;;  ;; '(font-lock-string-face ((t (:slant italic :foreground "#E6DB74"))))
-  ;;  '(font-lock-doc-face ((t (:slant italic :foreground "#75715E"))))
-  ;;  '(ahs-face ((t (:foreground "black" :background "Orange1"))))
-  ;;  '(ahs-plugin-whole-buffer-face ((t (:foreground "gray80" :background "#474842"))))
-  ;;  ;; '(ahs-face ((t (:background "#373832"))))
-  ;;  ;; 'tangotango
-  ;;  ;; '(font-lock-comment-face ((t (:slant italic :foreground "#888a85"))))
-  ;;  ;; '(font-lock-doc-face ((t (:slant italic :foreground "#888a85"))))
-  ;;  ;; '(ahs-plugin-whole-buffer-face ((t (:background "#2e3434"))))
-  ;;  ;; '(highlight ((t (:background "#3e4444"))))
-  ;;  )
-  ;; (spacemacs/toggle-automatic-symbol-highlight-on)
-  (spacemacs/toggle-vi-tilde-fringe-off)
-  (global-git-commit-mode 1)
+layers configuration.
+This is the place where most of your configurations should be done. Unless it is
+explicitly specified that a variable should be set before a package is loaded,
+you should place your code here."
 
-  ;; whitespace mode
-  (setq-default whitespace-style '(face empty space-after-tab space-before-tab trailing))
-  (global-whitespace-mode)
+  (global-whitespace-mode 1)
+  (setq whitespace-style '(face empty space-after-tab space-before-tab))
 
-  ;; smartparens
   (show-smartparens-global-mode -1)
 
-  ;; evil-escape
-  (setq evil-escape-delay 0.4)
-  (setq evil-escape-key-sequence (kbd "fj"))
+  ;; c#
+  (setq omnisharp-server-executable-path "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
+  (add-hook 'csharp-mode-hook (lambda ()
+                                (setq indent-tabs-mode t)
+                                (setq tab-width 4)))
 
-  ;; camelcaseaction
-  (spacemacs/toggle-camel-case-motion-globally-on)
-
-  ;; omnisharp
-  (setq-default omnisharp-server-executable-path "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
-  (evil-define-key 'normal csharp-mode-map (kbd "<f12>") #'omnisharp-go-to-definition)
-  (evil-define-key 'normal csharp-mode-map (kbd "<f11>") #'my-code-format)
-
-  ;; 인덴트는 스페이스로
-  (setq-default indent-tabs-mode nil)
-
-  ;; evil-search-module
-  (setq evil-search-module 'evil-search)
-
-  ;; 키 설정
-  (global-set-key (kbd "s-1") 'select-window-1)
-  (global-set-key (kbd "s-2") 'select-window-2)
-  (global-set-key (kbd "s-3") (lambda ()
-                                (interactive)
-                                (delete-other-windows)
-                                (split-window-right-and-focus)))
-  (global-set-key (kbd "s-b") 'helm-mini)
+  (global-set-key (kbd "s-b") 'helm-buffers-list)
+  (global-set-key (kbd "s-l") 'spacemacs/layouts-micro-state)
   (global-set-key (kbd "s-p") 'helm-projectile)
-  (global-set-key (kbd "s-t") (lambda ()
-                                (interactive)
-                                (call-interactively (key-binding ""))
-                                (call-interactively (key-binding ",ta"))))
-  (global-set-key (kbd "s-/") 'spacemacs/comment-or-uncomment-lines)
-  (global-set-key (kbd "<f12>") 'omnisharp-go-to-definition)
-  (global-set-key (kbd "<f9>") 'omnisharp-build-in-emacs)
-  ;; (global-set-key (kbd "<tab>") #'yas-expand)
-
-  ;; auto-complete
-  (global-company-mode)
-
-  ;; (set-face-attribute 'fringe nil :background "#2e3434" :foreground "#888a85")
-  ;; -- Fringeline
-  ;; Display - in the fringe line for EOF
-  ;; (setq-default indicate-empty-lines t)
-  ;; Set the fringe bitmaps as emacs default values
-  (setq-default fringe-indicator-alist
-                '((truncation left-arrow right-arrow)
-                  (continuation left-curly-arrow right-curly-arrow)
-                  (overlay-arrow . right-triangle)
-                  (up . up-arrow)
-                  (down . down-arrow)
-                  (top top-left-angle top-right-angle)
-                  (bottom bottom-left-angle
-                          bottom-right-angle
-                          top-right-angle
-                          top-left-angle)
-                  (top-bottom left-bracket
-                              right-bracket
-                              top-right-angle
-                              top-left-angle)
-                  (empty-line . empty-line)
-                  (unknown . question-mark)))
-  )
-
-;; 프로세스 죽일지 물어보는 거 방지
-(defun set-exit-flags ()
-  (dolist (elem (process-list))
-    (set-process-query-on-exit-flag elem nil)))
-
-;; c# 코드를 포맷
-(defun my-code-format ()
-  "c# 코드를 포맷하고 탭으로 바꾼다"
-  (interactive)
-  (omnisharp-code-format)
-  (tabify (point-min) (point-max)))
-
-(defun save-framegeometry ()
-  "Gets the current frame's geometry and saves to ~/.emacs.d/framegeometry."
-  (let (
-        (framegeometry-left (frame-parameter (selected-frame) 'left))
-        (framegeometry-top (frame-parameter (selected-frame) 'top))
-        (framegeometry-width (frame-parameter (selected-frame) 'width))
-        (framegeometry-height (frame-parameter (selected-frame) 'height))
-        (framegeometry-file (expand-file-name "~/.emacs.d/private/framegeometry"))
-        )
-
-    (when (not (number-or-marker-p framegeometry-left))
-      (setq framegeometry-left 0))
-    (when (not (number-or-marker-p framegeometry-top))
-      (setq framegeometry-top 0))
-    (when (not (number-or-marker-p framegeometry-width))
-      (setq framegeometry-width 0))
-    (when (not (number-or-marker-p framegeometry-height))
-      (setq framegeometry-height 0))
-
-    (with-temp-buffer
-      (insert
-       ";;; This is the previous emacs frame's geometry.\n"
-       ";;; Last generated " (current-time-string) ".\n"
-       "(setq initial-frame-alist\n"
-       "      '(\n"
-       (format "        (top . %d)\n" (max framegeometry-top 0))
-       (format "        (left . %d)\n" (max framegeometry-left 0))
-       (format "        (width . %d)\n" (max framegeometry-width 0))
-       (format "        (height . %d)))\n" (max framegeometry-height 0)))
-      (when (file-writable-p framegeometry-file)
-        (write-file framegeometry-file))))
-  )
-
-(defun load-framegeometry ()
-  "Loads ~/.emacs.d/framegeometry which should load the previous frame's
-geometry."
-  (let ((framegeometry-file (expand-file-name "~/.emacs.d/private/framegeometry")))
-    (when (file-readable-p framegeometry-file)
-      (load-file framegeometry-file)))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(compilation-message-face (quote default))
- '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
- '(highlight-tail-colors
-   (quote
-    (("#3E3D31" . 0)
-     ("#67930F" . 20)
-     ("#349B8D" . 30)
-     ("#21889B" . 50)
-     ("#968B26" . 60)
-     ("#A45E0A" . 70)
-     ("#A41F99" . 85)
-     ("#3E3D31" . 100))))
- '(initial-frame-alist
-   (quote
-    ((vertical-scroll-bars)
-     (left . 570)
-     (top . 20)
-     (width . 246)
-     (height . 77))))
- '(magit-diff-use-overlays nil)
- '(pos-tip-background-color "#A6E22E")
- '(pos-tip-foreground-color "#272822")
- '(weechat-color-list
-   (unspecified "#272822" "#3E3D31" "#A20C41" "#F92672" "#67930F" "#A6E22E" "#968B26" "#E6DB74" "#21889B" "#66D9EF" "#A41F99" "#FD5FF0" "#349B8D" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

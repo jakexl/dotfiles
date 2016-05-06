@@ -105,6 +105,7 @@
 (global-set-key (kbd "s-v") 'yank)
 (global-set-key (kbd "s-c") 'kill-ring-save)
 (global-set-key (kbd "s-a") 'mark-whole-buffer)
+(global-set-key (kbd "s-k") 'my-kill-buffer)
 (global-set-key (kbd "s-x") 'kill-region)
 (global-set-key (kbd "s-w") 'delete-window)
 (global-set-key (kbd "s-W") 'delete-frame)
@@ -123,6 +124,8 @@
 (global-set-key (kbd "<f1>") 'helm-apropos)
 (global-set-key (kbd "<f4>") 'flycheck-next-error)
 (global-set-key (kbd "<f9>") 'alchemist-mix-test)
+(global-set-key (kbd "<f11>") 'magit-status)
+(global-set-key (kbd "s-l") 'eval-last-sexp)
 
 (define-key isearch-mode-map (kbd "s-f") 'isearch-repeat-forward)
 (define-key isearch-mode-map (kbd "s-F") 'isearch-repeat-backward)
@@ -153,6 +156,10 @@
                   (point))))
     (comment-or-uncomment-region start end)))
 
+(defun my-kill-buffer ()
+  (interactive)
+  (kill-buffer nil))
+
                                         ; customize
 
 (custom-set-variables
@@ -160,6 +167,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   (vector "#cccccc" "#f2777a" "#99cc99" "#ffcc66" "#6699cc" "#cc99cc" "#66cccc" "#515151"))
  '(backup-directory-alist (quote (("." . "~/Downloads/backup"))))
  '(column-number-mode t)
  '(company-idle-delay 0.1)
@@ -167,12 +178,13 @@
  '(company-tooltip-flip-when-above t)
  '(cua-mode nil nil (cua-base))
  '(cursor-type (quote (bar . 3)))
- '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
+ '(custom-enabled-themes (quote (adwaita)))
  '(custom-safe-themes
    (quote
-    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
+    ("c31fa0ae5bd95aade4854dcf2fb2130dd2c225d57b5c85a3226001c2e59fa5d0" "06901dfc137da2060fb9bcfc4819a5ca7c7cd96fb685fe1942a6d4110ff89d33" "c58cbdc3633f6537e5c7bc29529d26736527bd80cd1348768e189eadfbcb10b2" "c449c1bdbc03f5521791a78083b6958f40469d64ee10a0669e8eea7bbb31b888" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
  '(desktop-save-mode t)
  '(dired-use-ls-dired nil)
+ '(fci-rule-color "#515151")
  '(fill-column 100)
  '(global-company-mode t)
  '(global-hl-line-mode t)
@@ -190,7 +202,7 @@
    (quote
     ((left . 700)
      (top . 20)
-     (width . 210)
+     (width . 212)
      (height . 80))))
  '(linum-format "%4d")
  '(mac-auto-operator-composition-mode t)
@@ -200,8 +212,31 @@
  '(projectile-global-mode t)
  '(scroll-bar-mode nil)
  '(shell-file-name "/bin/bash")
+ '(size-indication-mode t)
  '(tab-width 2)
  '(tool-bar-mode nil)
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#f2777a")
+     (40 . "#f99157")
+     (60 . "#ffcc66")
+     (80 . "#99cc99")
+     (100 . "#66cccc")
+     (120 . "#6699cc")
+     (140 . "#cc99cc")
+     (160 . "#f2777a")
+     (180 . "#f99157")
+     (200 . "#ffcc66")
+     (220 . "#99cc99")
+     (240 . "#66cccc")
+     (260 . "#6699cc")
+     (280 . "#cc99cc")
+     (300 . "#f2777a")
+     (320 . "#f99157")
+     (340 . "#ffcc66")
+     (360 . "#99cc99"))))
+ '(vc-annotate-very-old-color nil)
  '(whitespace-style
    (quote
     (face empty space-after-tab space-before-tab trailing))))

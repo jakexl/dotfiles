@@ -13,7 +13,7 @@ values."
    dotspacemacs-distribution 'spacemacs
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   dotspacemacs-configuration-layer-path '("~/work/dotfiles/spacemacs-layers/")
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
@@ -26,7 +26,7 @@ values."
      ;; auto-completion
      ;; better-defaults
      emacs-lisp
-     ;; git
+     git
      ;; markdown
      ;; org
      ;; (shell :variables
@@ -49,7 +49,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(beacon nlinum)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -82,7 +82,7 @@ values."
    ;; variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
    ;; uses emacs key bindings for vim's insert mode, but otherwise leaves evil
    ;; unchanged. (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style 'hybrid
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -215,10 +215,10 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers t
+   dotspacemacs-line-numbers nil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode t
+   dotspacemacs-smartparens-strict-mode nil
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -239,7 +239,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup trailing
    ))
 
 (defun dotspacemacs/user-init ()
@@ -260,21 +260,78 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  (global-whitespace-mode 1)
-  (setq whitespace-style '(face empty space-after-tab space-before-tab))
+  (setq backup-by-copying t
+        backup-directory-alist '(("." . "~/Downloads/backup")))
+  (setq backward-delete-char-untabify-method nil)
+
+  (setq spacemacs-show-trailing-whitespace nil
+        whitespace-style '(face indentation empty spaces space-after-tab space-before-tab trailing lines-tail)
+        whitespace-line-column 100)
 
   (show-smartparens-global-mode -1)
 
-  ;; c#
-  (setq omnisharp-server-executable-path "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
-  (add-hook 'csharp-mode-hook (lambda ()
-                                (setq indent-tabs-mode t)
-                                (setq tab-width 4)))
+  ;; (setq spaceline-show-default-input-method t)
+  (beacon-mode 1)
 
+  (add-hook 'text-mode-hook 'nlinum-mode)
+  (add-hook 'prog-mode-hook 'nlinum-mode)
+  (setq nlinum-format "%4d")
+
+  ;; (set-face-attribute 'linum nil :height 0.8)
+
+  ;; c#
+  (setq omnisharp-server-executable-path
+        "~/Downloads/omnisharp-server/OmniSharp/bin/Debug/OmniSharp.exe")
+  (add-hook 'csharp-mode-hook 'my-csharp-mode)
+  (add-hook 'omnisharp-mode-hook 'my-omnisharp-mode)
+
+  (global-set-key (kbd "s-\\") 'my-split-window)
+  (global-set-key (kbd "s-/") 'spacemacs/comment-or-uncomment-lines)
+
+  (global-set-key (kbd "s-1") 'select-window-1)
+  (global-set-key (kbd "s-2") 'select-window-2)
+  (global-set-key (kbd "s-3") 'select-window-3)
+  (global-set-key (kbd "s-4") 'select-window-4)
   (global-set-key (kbd "s-b") 'helm-buffers-list)
   (global-set-key (kbd "s-l") 'spacemacs/layouts-micro-state)
   (global-set-key (kbd "s-p") 'helm-projectile)
+
+  (global-set-key (kbd "<f4>") 'my-next-error)
+  (global-set-key (kbd "S-<f4>") 'my-prev-error)
+
+  (global-set-key (kbd "<home>") 'spacemacs/smart-move-beginning-of-line)
   )
 
+(defun my-split-window ()
+  (interactive)
+  (delete-other-windows)
+  (split-window-right))
+
+(defun my-prev-error ()
+  (interactive)
+  (spacemacs/toggle-syntax-checking-on)
+  (spacemacs/previous-error))
+
+(defun my-next-error ()
+  (interactive)
+  (spacemacs/toggle-syntax-checking-on)
+  (spacemacs/next-error))
+
+(defun my-csharp-mode ()
+  (define-key csharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
+  (define-key csharp-mode-map (kbd "M-<f12>") 'omnisharp-go-to-definition-other-window)
+  (setq tab-width 4)
+  (setq tab-stop-list (number-sequence 4 200 4))
+  (setq indent-tabs-mode t)
+  (setq whitespace-style (quote (face space-before-tab empty space-after-tab)))
+  (whitespace-mode 1)
+  (my-whitespace-mode-local))
+
+(defun my-omnisharp-mode ()
+  (dolist (proc (process-list))
+    (set-process-query-on-exit-flag proc nil)))
+
+(defun my-whitespace-mode-local ()
+  (add-hook 'hack-local-variables-hook 'whitespace-mode nil 'local))
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

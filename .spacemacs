@@ -270,14 +270,25 @@ you should place your code here."
 
   (show-smartparens-global-mode -1)
 
+  (setq-default evil-escape-key-sequence "jk")
+  (setq-default evil-escape-delay 0.4)
+
+  (mac-auto-operator-composition-mode 1)
+  (setq-default line-spacing 2)
+  (add-hook 'focus-out-hook 'my-save)
+
   ;; (setq spaceline-show-default-input-method t)
   (beacon-mode 1)
 
+  ;; line number
   (add-hook 'text-mode-hook 'nlinum-mode)
   (add-hook 'prog-mode-hook 'nlinum-mode)
   (setq nlinum-format "%4d")
 
   ;; (set-face-attribute 'linum nil :height 0.8)
+
+  ;; elixir
+  (add-hook 'elixir-mode-hook 'my-elixir-mode)
 
   ;; c#
   (setq omnisharp-server-executable-path
@@ -317,16 +328,20 @@ you should place your code here."
   (spacemacs/toggle-syntax-checking-on)
   (spacemacs/next-error))
 
+(defun my-elixir-mode ()
+  (define-key elixir-mode-map (kbd "<f12>") 'alchemist-goto-definition-at-point))
+
 (defun my-csharp-mode ()
   (define-key csharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
   (define-key csharp-mode-map (kbd "M-<f12>") 'omnisharp-go-to-definition-other-window)
+  (define-key csharp-mode-map (kbd "S-<f12>") 'omnisharp-helm-find-usages)
   (setq csharp-want-imenu nil)
   (setq tab-width 4)
   (setq tab-stop-list (number-sequence 4 200 4))
   (setq indent-tabs-mode t)
-  (setq whitespace-style (quote (face space-before-tab empty space-after-tab trailing lines-tail)))
-  (whitespace-mode 1)
-  (my-whitespace-mode-local))
+  (setq whitespace-style '(face empty space-before-tab space-after-tab trailing lines-tail))
+  (font-lock-add-keywords nil my-extra-whitespace)
+  )
 
 (defun my-omnisharp-mode ()
   (dolist (proc (process-list))
@@ -334,5 +349,16 @@ you should place your code here."
 
 (defun my-whitespace-mode-local ()
   (add-hook 'hack-local-variables-hook 'whitespace-mode nil 'local))
+
+(defun my-save ()
+  "고쳐진 모든 버퍼를 저장한다."
+  (interactive)
+  (save-some-buffers t))
+
+(defvar my-extra-whitespace
+  '(("^ +" . 'trailing-whitespace)
+    ("\t \\{4,\\}" . 'trailing-whitespace)
+    ("\t +\t" . 'trailing-whitespace)))
+
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

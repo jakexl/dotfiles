@@ -3,12 +3,12 @@
 	"always_show_minimap_viewport": true,
 	"bold_folder_labels": true,
 	"caret_style": "smooth",
-	"color_scheme": "Packages/User/SublimeLinter/Monokai-Soft (SL).tmTheme",
+	"color_scheme": "Packages/User/SublimeLinter/LAZY (SL).tmTheme",
 	"env":
 	{
 		"PATH": "/usr/local/bin"
 	},
-	"font_face": "Fira Code",
+	"font_face": "Fira Code light",
 	"font_size": 14,
 	"highlight_line": true,
 	"ignored_packages":
@@ -41,6 +41,6 @@
 	],
 	"save_on_focus_lost": true,
 	"show_encoding": true,
-	"theme": "Material-Theme.sublime-theme",
+	"theme": "Otto Yesterday.sublime-theme",
 	"vintageous_magic": false
 }

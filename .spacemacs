@@ -13,7 +13,7 @@ values."
    dotspacemacs-distribution 'spacemacs
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '("~/work/dotfiles/spacemacs-layers/")
+   dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
@@ -239,7 +239,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup trailing
+   dotspacemacs-whitespace-cleanup 'trailing
    ))
 
 (defun dotspacemacs/user-init ()
@@ -320,10 +320,11 @@ you should place your code here."
 (defun my-csharp-mode ()
   (define-key csharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
   (define-key csharp-mode-map (kbd "M-<f12>") 'omnisharp-go-to-definition-other-window)
+  (setq csharp-want-imenu nil)
   (setq tab-width 4)
   (setq tab-stop-list (number-sequence 4 200 4))
   (setq indent-tabs-mode t)
-  (setq whitespace-style (quote (face space-before-tab empty space-after-tab)))
+  (setq whitespace-style (quote (face space-before-tab empty space-after-tab trailing lines-tail)))
   (whitespace-mode 1)
   (my-whitespace-mode-local))
 

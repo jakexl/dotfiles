@@ -273,6 +273,7 @@ you should place your code here."
 
   (show-smartparens-global-mode -1)
   (sp-pair "(" ")" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
+  (sp-pair "{" "}" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
 
   (setq-default evil-escape-key-sequence "fj")
   (setq-default evil-escape-delay 0.4)
@@ -349,6 +350,7 @@ you should place your code here."
   (alchemist-mix-test))
 
 (defun my-csharp-mode ()
+  (define-key csharp-mode-map (kbd "<f9>") 'my-compile)
   (define-key csharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
   (define-key csharp-mode-map (kbd "M-<f12>") 'omnisharp-go-to-definition-other-window)
   (define-key csharp-mode-map (kbd "S-<f12>") 'omnisharp-helm-find-usages)
@@ -357,8 +359,13 @@ you should place your code here."
   (setq tab-stop-list (number-sequence 4 200 4))
   (setq indent-tabs-mode t)
   (setq whitespace-style '(face empty space-before-tab space-after-tab trailing lines-tail))
-  (font-lock-add-keywords nil my-extra-whitespace)
+  ;; (font-lock-add-keywords nil my-extra-whitespace)
   )
+
+(defun my-compile ()
+  (interactive)
+  (save-some-buffers t)
+  (omnisharp-build-in-emacs))
 
 (defun my-omnisharp-mode ()
   (dolist (proc (process-list))

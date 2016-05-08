@@ -3,7 +3,7 @@
 	"always_show_minimap_viewport": true,
 	"bold_folder_labels": true,
 	"caret_style": "smooth",
-	"color_scheme": "Packages/User/SublimeLinter/LAZY (SL).tmTheme",
+	"color_scheme": "Packages/User/SublimeLinter/base16-eighties.dark (SL).tmTheme",
 	"env":
 	{
 		"PATH": "/usr/local/bin"
@@ -41,6 +41,6 @@
 	],
 	"save_on_focus_lost": true,
 	"show_encoding": true,
-	"theme": "Otto Yesterday.sublime-theme",
+	"theme": "Otto Tomorrow.sublime-theme",
 	"vintageous_magic": false
 }

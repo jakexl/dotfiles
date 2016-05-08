@@ -23,8 +23,11 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ;; auto-completion
-     ;; better-defaults
+     (auto-completion :variables
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip nil)
+     better-defaults
      emacs-lisp
      git
      ;; markdown
@@ -33,17 +36,12 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     ;; syntax-checking
-     ;; version-control
+     syntax-checking
+     version-control
      osx
      csharp
      elixir
-     syntax-checking
-     better-defaults
-     (auto-completion :variables
-                      auto-completion-enable-sort-by-usage t
-                      auto-completion-enable-snippets-in-popup t
-                      auto-completion-enable-help-tooltip nil)
+     themes-megapack
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -104,13 +102,18 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(leuven
+   dotspacemacs-themes '(
+                         moe-light
+                         moe-dark
+                         sanityinc-tomorrow-eighties
+                         zenburn
+                         leuven
                          spacemacs-dark
                          spacemacs-light
                          solarized-light
                          solarized-dark
                          monokai
-                         zenburn)
+                         )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -269,8 +272,9 @@ you should place your code here."
         whitespace-line-column 100)
 
   (show-smartparens-global-mode -1)
+  (sp-pair "(" ")" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
 
-  (setq-default evil-escape-key-sequence "jk")
+  (setq-default evil-escape-key-sequence "fj")
   (setq-default evil-escape-delay 0.4)
 
   (mac-auto-operator-composition-mode 1)
@@ -286,6 +290,12 @@ you should place your code here."
   (setq nlinum-format "%4d")
 
   ;; (set-face-attribute 'linum nil :height 0.8)
+
+  ;; helm
+  (add-hook 'helm-mode-hook 'my-helm-mode)
+
+  ;; moe
+  (moe-theme-random-color)
 
   ;; elixir
   (add-hook 'elixir-mode-hook 'my-elixir-mode)
@@ -304,6 +314,7 @@ you should place your code here."
   (global-set-key (kbd "s-3") 'select-window-3)
   (global-set-key (kbd "s-4") 'select-window-4)
   (global-set-key (kbd "s-b") 'helm-buffers-list)
+  (global-set-key (kbd "s-K") 'spacemacs/kill-other-buffers)
   (global-set-key (kbd "s-l") 'spacemacs/layouts-micro-state)
   (global-set-key (kbd "s-p") 'helm-projectile)
 
@@ -329,7 +340,13 @@ you should place your code here."
   (spacemacs/next-error))
 
 (defun my-elixir-mode ()
+  (define-key elixir-mode-map (kbd "<f9>") 'my-test)
   (define-key elixir-mode-map (kbd "<f12>") 'alchemist-goto-definition-at-point))
+
+(defun my-test ()
+  (interactive)
+  (save-some-buffers t)
+  (alchemist-mix-test))
 
 (defun my-csharp-mode ()
   (define-key csharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
@@ -359,6 +376,10 @@ you should place your code here."
   '(("^ +" . 'trailing-whitespace)
     ("\t \\{4,\\}" . 'trailing-whitespace)
     ("\t +\t" . 'trailing-whitespace)))
+
+(defun my-helm-mode ()
+  (define-key helm-map (kbd "s-d") 'helm-buffer-run-kill-persistent)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

@@ -109,7 +109,7 @@ values."
                          zenburn
                          leuven
                          spacemacs-dark
-                         spacemacs-light
+                         ;; spacemacs-light
                          solarized-light
                          solarized-dark
                          monokai
@@ -327,11 +327,11 @@ you should place your code here."
 
   (global-set-key (kbd "<f4>") 'my-next-error)
   (global-set-key (kbd "S-<f4>") 'my-prev-error)
-  (global-set-key (kbd "<f8>") 'my-close-3-window)
   (global-unset-key (kbd "<f11>"))
 
   (global-set-key (kbd "<home>") 'spacemacs/smart-move-beginning-of-line)
 
+  (define-key evil-normal-state-map [escape] 'my-close-window)
   )
 
 (defun my-split-window ()
@@ -339,10 +339,20 @@ you should place your code here."
   (delete-other-windows)
   (split-window-right))
 
-(defun my-close-3-window ()
+(defun my-close-window ()
+  "현재 윈도 개수에 따라 마지막 윈도를 닫는다"
   (interactive)
-  (select-window-3)
-  (delete-window))
+  (let ((num-win (length (window-list))))
+    (cond
+     ((= num-win 4)
+      (select-window-4)
+      (delete-window))
+     ((= num-win 3)
+      (select-window-3)
+      (delete-window))
+     ((= num-win 2)
+      (select-window-2)
+      (delete-window)))))
 
 (defun my-prev-error ()
   (interactive)
@@ -406,8 +416,21 @@ you should place your code here."
     ("\t +\t" . 'trailing-whitespace)))
 
 (defun my-helm-mode ()
-  (define-key helm-map (kbd "s-d") 'helm-buffer-run-kill-persistent)
+  (define-key helm-map (kbd "s-d") 'my-kill-buffer)
   )
+
+(defun my-kill-buffer ()
+  "물어보지 않고 버퍼를 없앰"
+  (interactive)
+  (let ((marked (helm-marked-candidates)))
+    (unwind-protect
+        (cl-loop for b in marked
+                 do (progn (helm-buffers-persistent-kill-1 b)))
+      (with-helm-buffer
+        (setq helm-marked-candidates nil
+              helm-visible-mark-overlays nil))
+      (helm-force-update (helm-buffers--quote-truncated-buffer
+                          (helm-get-selection))))))
 
 (defun my-correct-alchemist ()
   (interactive)
@@ -415,8 +438,11 @@ you should place your code here."
   (find-file "~/work/q5/program/server/mix.exs"))
 
 (defun random-color-theme ()
+  "랜덤 테마를 표시한다"
   (interactive)
   (random t)
-  (spacemacs/load-theme (nth (random (length dotspacemacs-themes)) dotspacemacs-themes)))
+  (setq theme (nth (random (length dotspacemacs-themes)) dotspacemacs-themes))
+  (message "%s" theme)
+  (spacemacs/load-theme theme))
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

@@ -47,7 +47,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(beacon nlinum)
+   dotspacemacs-additional-packages '(beacon nlinum editorconfig)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -274,6 +274,7 @@ you should place your code here."
   (show-smartparens-global-mode -1)
   (sp-pair "(" ")" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
   (sp-pair "{" "}" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
+  (sp-pair "[" "]" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
 
   (setq-default evil-escape-key-sequence "fj")
   (setq-default evil-escape-delay 0.4)
@@ -307,6 +308,9 @@ you should place your code here."
   (add-hook 'csharp-mode-hook 'my-csharp-mode)
   (add-hook 'omnisharp-mode-hook 'my-omnisharp-mode)
 
+  ;; random theme
+  (run-with-timer 1 (* 60 60) 'random-color-theme)
+
   (global-set-key (kbd "s-\\") 'my-split-window)
   (global-set-key (kbd "s-/") 'spacemacs/comment-or-uncomment-lines)
 
@@ -315,20 +319,30 @@ you should place your code here."
   (global-set-key (kbd "s-3") 'select-window-3)
   (global-set-key (kbd "s-4") 'select-window-4)
   (global-set-key (kbd "s-b") 'helm-buffers-list)
+  (global-set-key (kbd "s-k") 'kill-this-buffer)
   (global-set-key (kbd "s-K") 'spacemacs/kill-other-buffers)
   (global-set-key (kbd "s-l") 'spacemacs/layouts-micro-state)
   (global-set-key (kbd "s-p") 'helm-projectile)
+  (global-set-key (kbd "s-t") 'neotree-find-project-root)
 
   (global-set-key (kbd "<f4>") 'my-next-error)
   (global-set-key (kbd "S-<f4>") 'my-prev-error)
+  (global-set-key (kbd "<f8>") 'my-close-3-window)
+  (global-unset-key (kbd "<f11>"))
 
   (global-set-key (kbd "<home>") 'spacemacs/smart-move-beginning-of-line)
+
   )
 
 (defun my-split-window ()
   (interactive)
   (delete-other-windows)
   (split-window-right))
+
+(defun my-close-3-window ()
+  (interactive)
+  (select-window-3)
+  (delete-window))
 
 (defun my-prev-error ()
   (interactive)
@@ -342,12 +356,19 @@ you should place your code here."
 
 (defun my-elixir-mode ()
   (define-key elixir-mode-map (kbd "<f9>") 'my-test)
+  (define-key elixir-mode-map (kbd "S-<f9>") 'my-mix-c)
+  (define-key elixir-mode-map (kbd "<f11>") 'my-correct-alchemist)
   (define-key elixir-mode-map (kbd "<f12>") 'alchemist-goto-definition-at-point))
 
 (defun my-test ()
   (interactive)
   (save-some-buffers t)
   (alchemist-mix-test))
+
+(defun my-mix-c ()
+  (interactive)
+  (save-some-buffers t)
+  (alchemist-mix-execute (list "c")))
 
 (defun my-csharp-mode ()
   (define-key csharp-mode-map (kbd "<f9>") 'my-compile)
@@ -388,5 +409,14 @@ you should place your code here."
   (define-key helm-map (kbd "s-d") 'helm-buffer-run-kill-persistent)
   )
 
+(defun my-correct-alchemist ()
+  (interactive)
+  (kill-buffer "*alchemist-server*")
+  (find-file "~/work/q5/program/server/mix.exs"))
+
+(defun random-color-theme ()
+  (interactive)
+  (random t)
+  (spacemacs/load-theme (nth (random (length dotspacemacs-themes)) dotspacemacs-themes)))
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

@@ -1,5 +1,9 @@
 {
 	"Seti_tabs_small": true,
+	"additional_path_items":
+	[
+		"/usr/local/bin"
+	],
 	"always_show_minimap_viewport": true,
 	"bold_folder_labels": true,
 	"caret_style": "smooth",
@@ -13,13 +17,7 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"Vintage",
-		"Vintageous"
-	],
-	"indent_guide_options":
-	[
-		"draw_normal",
-		"draw_active"
+		"Vintage"
 	],
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
@@ -41,6 +39,7 @@
 	],
 	"save_on_focus_lost": true,
 	"show_encoding": true,
-	"theme": "Default.sublime-theme",
-	"vintageous_magic": false
+	"theme": "Theme - Kronuz.sublime-theme",
+	"vintageous_magic": false,
+	"vintageous_use_ctrl_keys": true
 }

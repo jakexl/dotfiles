@@ -5,4 +5,7 @@
 	{ "keys": ["shift+end"], "command": "move_to", "args": {"to": "eol", "extend": true} },
 	{ "keys": ["f12"], "command": "goto_definition" },
 	{ "keys": ["ctrl+["], "command": "_enter_normal_mode", 	"args": {"mode": "mode_insert"},	"context": [{"key": "vi_insert_mode_aware"}]},
+	{ "keys": ["super+1"], "command": "focus_neighboring_group", "args": {"forward": false} },
+	{ "keys": ["super+2"], "command": "focus_neighboring_group" },
+	{ "keys": ["super+k", "super+w"], "command": "destroy_pane", "args": {"direction": "self"} },
 ]

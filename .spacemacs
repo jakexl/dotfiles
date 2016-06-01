@@ -25,16 +25,20 @@ values."
      ;; ----------------------------------------------------------------
      (auto-completion :variables
                       auto-completion-enable-sort-by-usage t
-                      auto-completion-enable-snippets-in-popup t
-                      auto-completion-enable-help-tooltip nil)
+                      ;; auto-completion-enable-snippets-in-popup t
+                      ;; auto-completion-enable-help-tooltip t
+                      )
      better-defaults
      emacs-lisp
      git
      ;; markdown
-     ;; org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
+     org
+     (shell :variables
+            shell-default-shell 'eshell
+            shell-default-term-shell "/bin/bash"
+            shell-enable-smart-eshell t
+            shell-default-height 50
+            shell-default-position 'bottom)
      ;; spell-checking
      syntax-checking
      version-control
@@ -49,7 +53,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(beacon editorconfig)
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(ruby-end)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -82,14 +86,14 @@ values."
    ;; unchanged. (default 'vim)
    dotspacemacs-editing-style 'hybrid
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading nil
+   dotspacemacs-verbose-loading t
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner 'random
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -103,16 +107,22 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         zenburn
+                         gruvbox
+                         monokai
+                         tangotango
+                         gotham
+                         material
+                         ample
+                         lush
                          moe-light
                          moe-dark
                          sanityinc-tomorrow-eighties
-                         zenburn
                          leuven
                          spacemacs-dark
-                         ;; spacemacs-light
-                         ;; solarized-light
+                         spacemacs-light
+                         solarized-light
                          solarized-dark
-                         monokai
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -122,7 +132,7 @@ values."
                                :size 14
                                :weight light
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.2)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -156,7 +166,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
    ;; Location where to auto-save files. Possible values are `original' to
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
@@ -167,7 +177,7 @@ values."
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
-   dotspacemacs-use-ido nil
+   dotspacemacs-use-ido t
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
    dotspacemacs-helm-resize nil
    ;; if non nil, the helm header is hidden when there is only one source.
@@ -190,7 +200,7 @@ values."
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
+   dotspacemacs-loading-progress-bar nil
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
    dotspacemacs-fullscreen-at-startup nil
@@ -268,13 +278,23 @@ you should place your code here."
   (setq backward-delete-char-untabify-method nil)
 
   (setq spacemacs-show-trailing-whitespace nil
-        whitespace-style '(face indentation empty spaces space-after-tab space-before-tab trailing lines-tail)
+        whitespace-style '(face indentation empty space-after-tab space-before-tab trailing lines-tail)
         whitespace-line-column 100)
+
+  (global-whitespace-mode 1)
 
   (show-smartparens-global-mode -1)
   (sp-pair "(" ")" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
   (sp-pair "{" "}" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
   (sp-pair "[" "]" :unless '(sp-point-before-symbol-p sp-point-before-word-p))
+
+  ;; {를 누르면 기다렸다가 RET을 누르면 }를 자동 입력하고 한 줄을 띄운다
+  (sp-local-pair 'csharp-mode "{" "}" :when '(("SPC" "RET" "<evil-ret>")))
+  (sp-local-pair 'csharp-mode "{" nil :post-handlers '(:add my-open-block))
+
+  ;; do를 입력하면 기다렸다가 RET을 누르면 end를 자동입력하고 한 줄 띄운다
+  (sp-local-pair 'elixir-mode "do" "end" :when '(("SPC" "RET" "<evil-ret>")))
+  (sp-local-pair 'elixir-mode "do" nil :post-handlers '(:add my-open-block))
 
   (setq-default evil-escape-key-sequence "fj")
   (setq-default evil-escape-delay 0.4)
@@ -289,15 +309,12 @@ you should place your code here."
   ;; line number
   ;; (add-hook 'text-mode-hook 'nlinum-mode)
   ;; (add-hook 'prog-mode-hook 'nlinum-mode)
-  ;; (setq nlinum-format "%4d")
+  ;; (setq linum-format "%4d")
 
   ;; (set-face-attribute 'linum nil :height 0.8)
 
   ;; helm
   (add-hook 'helm-mode-hook 'my-helm-mode)
-
-  ;; moe
-  (moe-theme-random-color)
 
   ;; elixir
   (add-hook 'elixir-mode-hook 'my-elixir-mode)
@@ -308,8 +325,15 @@ you should place your code here."
   (add-hook 'csharp-mode-hook 'my-csharp-mode)
   (add-hook 'omnisharp-mode-hook 'my-omnisharp-mode)
 
+  ;; diminish
+  (diminish 'beacon-mode "🄱")
+  (diminish 'hybrid-mode "🄷")
+  (add-hook 'alchemist-mode-hook (lambda ()
+                                   (diminish 'alchemist-mode "🅰")))
+  (diminish 'omnisharp-mode "🅾")
+
   ;; random theme
-  (run-with-timer 1 (* 60 60) 'random-color-theme)
+  (run-with-timer 1 (* 60 60) 'my-random-color-theme)
 
   (global-set-key (kbd "s-\\") 'my-split-window)
   (global-set-key (kbd "s-/") 'spacemacs/comment-or-uncomment-lines)
@@ -321,7 +345,7 @@ you should place your code here."
   (global-set-key (kbd "s-b") 'helm-buffers-list)
   (global-set-key (kbd "s-k") 'kill-this-buffer)
   (global-set-key (kbd "s-K") 'spacemacs/kill-other-buffers)
-  (global-set-key (kbd "s-l") 'spacemacs/layouts-micro-state)
+  (global-set-key (kbd "s-l") 'sublime-text-control-l)
   (global-set-key (kbd "s-p") 'helm-projectile)
   (global-set-key (kbd "s-t") 'neotree-find-project-root)
 
@@ -333,6 +357,13 @@ you should place your code here."
 
   (define-key evil-normal-state-map [escape] 'my-close-window)
   )
+
+(defun my-open-block (id action context)
+  (when (eq action 'insert)
+    (newline)
+    (indent-according-to-mode)
+    (previous-line)
+    (indent-according-to-mode)))
 
 (defun my-split-window ()
   (interactive)
@@ -365,10 +396,54 @@ you should place your code here."
   (spacemacs/next-error))
 
 (defun my-elixir-mode ()
-  (define-key elixir-mode-map (kbd "<f9>") 'my-test)
+  (add-to-list 'compilation-error-regexp-alist 'elixir)
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(elixir
+                 "\\*\\* (CompileError) \\(.+?\\):\\([0-9]+\\): .*" 1 2))
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(elixir
+                 " *(.+?) \\(.+?\\):\\([0-9]+\\): .*" 1 2))
+  (define-key elixir-mode-map (kbd "s-=") 'my-indent-align)
+  (define-key elixir-mode-map (kbd "<f4>") 'next-error)
+  (define-key elixir-mode-map (kbd "<f9>") 'my-mix-compile)
   (define-key elixir-mode-map (kbd "S-<f9>") 'my-mix-c)
   (define-key elixir-mode-map (kbd "<f11>") 'my-correct-alchemist)
   (define-key elixir-mode-map (kbd "<f12>") 'alchemist-goto-definition-at-point))
+
+(defun my-indent-align ()
+  (interactive)
+  (save-excursion
+    (if (not (region-active-p))
+        (let ((near (my-find-nearest-region
+                     '(("\\<with\\>" . "\\<do\\>") ("\\<do\\>" . "\\<end\\>")))))
+          (my-indent-align-region near)
+          (message (format "point %s region %s" (point) near)))
+      (my-indent-align-region (cons  (region-beginning) (region-end))))))
+
+(defun my-find-nearest-region (pairs)
+  (let ((regions (mapcar 'my-find-region pairs))
+        (near '(0 . 0)))
+    (dolist (region regions near)
+      (if (and (< (car region) (point)) (< (point) (cdr region)) (< (car near) (car region)))
+          (setq near region)))))
+
+(defun my-find-region (pair)
+  (save-excursion
+    (let ((beg (search-backward-regexp (car pair) 0 t))
+          (end (search-forward-regexp (cdr pair))))
+      (if beg
+          (cons beg end)
+        '(0 . 0)))))
+
+(defun my-indent-align-region (region)
+  (indent-region (car region) (cdr region))
+  (align-regexp (car region) (cdr region) "\\(\\s-*\\)\\(->\\|<-\\|'\\)"))
+
+(defun my-mix-compile ()
+  (interactive)
+  (save-some-buffers t)
+  (let ((default-directory "~/work/q5/program/server/"))
+    (compile "mix test --no-color")))
 
 (defun my-test ()
   (interactive)
@@ -382,8 +457,8 @@ you should place your code here."
 
 (defun my-csharp-mode ()
   (define-key csharp-mode-map (kbd "<f9>") 'my-compile)
-  (define-key csharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition)
-  (define-key csharp-mode-map (kbd "M-<f12>") 'omnisharp-go-to-definition-other-window)
+  (define-key csharp-mode-map (kbd "<f12>") 'omnisharp-go-to-definition-other-window)
+  (define-key csharp-mode-map (kbd "M-<f12>") 'omnisharp-go-to-definition)
   (define-key csharp-mode-map (kbd "S-<f12>") 'omnisharp-helm-find-usages)
   (setq csharp-want-imenu nil)
   (setq tab-width 4)
@@ -437,12 +512,24 @@ you should place your code here."
   (kill-buffer "*alchemist-server*")
   (find-file "~/work/q5/program/server/mix.exs"))
 
-(defun random-color-theme ()
+(defun my-random-color-theme ()
   "랜덤 테마를 표시한다"
   (interactive)
   (random t)
   (setq theme (nth (random (length dotspacemacs-themes)) dotspacemacs-themes))
   (message "%s" theme)
-  (spacemacs/load-theme theme))
+  (spacemacs/load-theme theme)
+  (if (or (eq theme 'moe-light)
+          (eq theme 'moe-dark))
+      (moe-theme-random-color)))
+
+(defun sublime-text-control-l ()
+  (interactive)
+  (when (not (region-active-p))
+    (move-beginning-of-line nil)
+    (set-mark (point))
+    (activate-mark))
+  (move-beginning-of-line 2))
+
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

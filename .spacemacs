@@ -115,8 +115,8 @@ values."
                          material
                          ample
                          lush
-                         moe-light
-                         moe-dark
+                         ;; moe-light
+                         ;; moe-dark
                          sanityinc-tomorrow-eighties
                          leuven
                          spacemacs-dark
@@ -299,13 +299,16 @@ you should place your code here."
   (setq-default evil-escape-key-sequence "fj")
   (setq-default evil-escape-delay 0.4)
 
-  (mac-auto-operator-composition-mode 1)
+  ;; (mac-auto-operator-composition-mode 1)
   (setq-default line-spacing 2)
   (add-hook 'focus-out-hook 'my-save)
 
   ;; (setq spaceline-show-default-input-method t)
   (beacon-mode 1)
-
+  ;; (spacemacs/toggle-golden-ratio-on)
+  (setq projectile-globally-ignored-file-suffixes
+        '(".png" ".mat" ".controller" ".meta" ".anim" ".FBX" ".fbx" ".prefab" ".WAV" ".wav"
+          ".asset" ".tga" ".dds" ".overrideController" ".psd" ".shader"))
   ;; line number
   ;; (add-hook 'text-mode-hook 'nlinum-mode)
   ;; (add-hook 'prog-mode-hook 'nlinum-mode)
@@ -330,7 +333,8 @@ you should place your code here."
   (diminish 'hybrid-mode "🄷")
   (add-hook 'alchemist-mode-hook (lambda ()
                                    (diminish 'alchemist-mode "🅰")))
-  (diminish 'omnisharp-mode "🅾")
+  (add-hook 'omnisharp-mode-hook (lambda ()
+                                   (diminish 'omnisharp-mode "🅾")))
 
   ;; random theme
   (run-with-timer 1 (* 60 60) 'my-random-color-theme)
@@ -342,7 +346,13 @@ you should place your code here."
   (global-set-key (kbd "s-2") 'select-window-2)
   (global-set-key (kbd "s-3") 'select-window-3)
   (global-set-key (kbd "s-4") 'select-window-4)
+  (global-set-key (kbd "s-8") 'spacemacs/enter-ahs-forward)
+  (global-set-key (kbd "s-*") 'spacemacs/helm-project-smart-do-search-region-or-symbol)
+
+  (global-set-key (kbd "s-=") 'indent-region)
+
   (global-set-key (kbd "s-b") 'helm-buffers-list)
+  (global-set-key (kbd "s-f") 'isearch-forward)
   (global-set-key (kbd "s-k") 'kill-this-buffer)
   (global-set-key (kbd "s-K") 'spacemacs/kill-other-buffers)
   (global-set-key (kbd "s-l") 'sublime-text-control-l)
@@ -356,6 +366,8 @@ you should place your code here."
   (global-set-key (kbd "<home>") 'spacemacs/smart-move-beginning-of-line)
 
   (define-key evil-normal-state-map [escape] 'my-close-window)
+  (define-key isearch-mode-map (kbd "s-f") 'isearch-repeat-forward)
+  (define-key isearch-mode-map (kbd "s-F") 'isearch-repeat-backward)
   )
 
 (defun my-open-block (id action context)
@@ -368,7 +380,8 @@ you should place your code here."
 (defun my-split-window ()
   (interactive)
   (delete-other-windows)
-  (split-window-right))
+  (split-window-right)
+  (evil-window-right 1))
 
 (defun my-close-window ()
   "현재 윈도 개수에 따라 마지막 윈도를 닫는다"

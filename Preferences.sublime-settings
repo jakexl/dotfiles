@@ -6,14 +6,14 @@
 	],
 	"always_show_minimap_viewport": true,
 	"bold_folder_labels": true,
+	"caret_extra_width": 1,
 	"caret_style": "smooth",
-    "caret_extra_width": 1,
 	"color_scheme": "Packages/Boxy Theme/schemes/Boxy Tomorrow.tmTheme",
 	"env":
 	{
 		"PATH": "/usr/local/bin"
 	},
-	"font_face": "Fira Code light",
+	"font_face": "FiraCode-Light",
 	"font_size": 14,
 	"highlight_line": true,
 	"ignored_packages":
